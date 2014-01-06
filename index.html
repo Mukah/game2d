@@ -17,6 +17,15 @@
 		document.body.appendChild(renderer.view);
 		PIXI.Texture.SCALE_MODE.DEFAULT = PIXI.Texture.SCALE_MODE.NEAREST;
 
+		// create a tiling sprite..
+        // requires a texture, width and height
+        // to work in webGL the texture size must be a power of two
+        var grass_tex = PIXI.Texture.fromImage("assets/grass.png");
+        var grass = new PIXI.Sprite(grass_tex);
+        grass.scale = new PIXI.Point(2, 2);
+        
+		stage.addChild(grass);
+
 		requestAnimFrame( animate );
 		function animate() {
 			requestAnimFrame( animate );
