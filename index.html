@@ -9,21 +9,46 @@
 		}
 	</style>
 	<script src="pixi.js"></script>
+	<script src="jquery-1.10.2.min.js"></script>
 </head>
 <body>
 	<script>
+		function load_map(url) {
+			$.getJSON(url, function(map) {
+				console.log(map);
+				
+				$.each(map.tilesets, function(i, tileset){
+
+				});
+
+				$.each(map.layers, function(i, layer) {
+					console.log('Drawing \'' + layer.name + '\'...')
+					if(layer.visible == true) {
+						switch(layer.type) {
+							case 'tilelayer':
+								$.each(layer.data, function(i, tile) {
+									$('#map').append(tile + (((i+1) % layer.width == 0) ? '<br />' : ''));
+								});
+							break;
+						}
+					}
+					console.log("Done.");
+				});
+				console.log('Finished.');
+
+			});
+		}
+		load_map('assets/maps/test-1.json');
+
 		var stage = new PIXI.Stage(0x66FF99);
 		var renderer = PIXI.autoDetectRenderer(900, 600);
 		document.body.appendChild(renderer.view);
 		PIXI.Texture.SCALE_MODE.DEFAULT = PIXI.Texture.SCALE_MODE.NEAREST;
 
-		// create a tiling sprite..
-        // requires a texture, width and height
-        // to work in webGL the texture size must be a power of two
-        var grass_tex = PIXI.Texture.fromImage("assets/grass.png");
-        var grass = new PIXI.Sprite(grass_tex);
-        grass.scale = new PIXI.Point(2, 2);
-        
+		var grass_tex = PIXI.Texture.fromImage("assets/grass.png");
+		var grass = new PIXI.Sprite(grass_tex);
+		grass.scale = new PIXI.Point(2, 2);
+		
 		stage.addChild(grass);
 
 		requestAnimFrame( animate );
@@ -34,5 +59,7 @@
 			renderer.render(stage);
 		}
 	</script>
+	<div id="map">
+	</div>
 	</body>
 </html>
