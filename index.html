@@ -42,7 +42,7 @@
 			requestAnimFrame(Game.animate);
 		}
 		Game.load_map = function(url) {
-			console.log('Loading map \'url\'...');
+			console.log('Loading map \'' + url + '\'...');
 			$.getJSON(url, function(map) {
 				// Tilesets loading
 				Game.tilesets = new Object();
