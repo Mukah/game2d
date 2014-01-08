@@ -42,19 +42,17 @@
 			requestAnimFrame(Game.animate);
 		}
 		Game.load_map = function(url) {
+			console.log('Loading map \'url\'...');
 			$.getJSON(url, function(map) {
-				console.log(map);
-				
 				// Tilesets loading
 				Game.tilesets = new Object();
 				Game.tiles = new Object();
 				Game.tilewidth = map.tilewidth;
 				Game.tileheight = map.tileheight;
 				$.each(map.tilesets, function(i, tileset) {
-					console.log('Tileset \'' + tileset.name + '\' loaded.')
+					console.log('\'' + tileset.name + '\' loaded.')
 					Game.tilesets[tileset.name] = new PIXI.BaseTexture.fromImage(tileset.image);
-					console.log(tileset);
-
+					
 					var img_width = tileset.imagewidth + (tileset.margin * 2);
 					var img_height = tileset.imageheight + (tileset.margin * 2);
 					var tile_width = tileset.tilewidth + (tileset.spacing * 2);
@@ -75,10 +73,10 @@
 						gid++;
 					};
 
-					console.log(img_width + 'x' + img_height);
-					console.log(tile_width + 'x' + tile_height);
-					console.log(width + 'x' + height);
-					console.log(count);
+					//console.log(img_width + 'x' + img_height);
+					//console.log(tile_width + 'x' + tile_height);
+					//console.log(width + 'x' + height);
+					//console.log(count);
 				});
 
 				$.each(map.layers, function(i, layer) {
@@ -105,9 +103,8 @@
 					}
 					console.log("Done.");
 				});
-				console.log('Finished.');
 			}).done(function(){
-				console.log(Game.tilesets);
+				console.log('Finished.');
 			});
 		}
 
