@@ -13,12 +13,72 @@
 </head>
 <body>
 	<script>
-		function load_map(url) {
+		function Game() {
+		}
+		Game.stage = undefined;
+		Game.renderer = undefined;
+
+		Game.tilesets = undefined;
+		Game.tiles = undefined;
+		Game.tilewidth = undefined;
+		Game.tileheight = undefined;
+		Game.tilescale = 2;
+		Game.animate = function(){
+			requestAnimFrame(Game.animate);
+
+			// Execute update block
+			Game.onUpdate();
+
+			// Render the stage   
+			Game.renderer.render(Game.stage);
+		};
+		Game.onUpdate = function(){}
+
+		Game.initialize = function() {
+			Game.stage = new PIXI.Stage(0x5996FF);
+			Game.renderer = PIXI.autoDetectRenderer(900, 600);
+			document.body.appendChild(Game.renderer.view);
+			PIXI.Texture.SCALE_MODE.DEFAULT = PIXI.Texture.SCALE_MODE.NEAREST;
+			requestAnimFrame(Game.animate);
+		}
+		Game.load_map = function(url) {
 			$.getJSON(url, function(map) {
 				console.log(map);
 				
-				$.each(map.tilesets, function(i, tileset){
+				// Tilesets loading
+				Game.tilesets = new Object();
+				Game.tiles = new Object();
+				Game.tilewidth = map.tilewidth;
+				Game.tileheight = map.tileheight;
+				$.each(map.tilesets, function(i, tileset) {
+					console.log('Tileset \'' + tileset.name + '\' loaded.')
+					Game.tilesets[tileset.name] = new PIXI.BaseTexture.fromImage(tileset.image);
 					console.log(tileset);
+
+					var img_width = tileset.imagewidth + (tileset.margin * 2);
+					var img_height = tileset.imageheight + (tileset.margin * 2);
+					var tile_width = tileset.tilewidth + (tileset.spacing * 2);
+					var tile_height = tileset.tileheight + (tileset.spacing * 2);
+					var width = img_width / tile_width;
+					var height = img_height / tile_height;
+					var count = width * height;
+
+					var x = 0, y = 0;
+					var gid = tileset.firstgid;
+					for (var i = 0; i < count; i++) {
+						Game.tiles[gid] = new PIXI.Texture(Game.tilesets[tileset.name], new PIXI.Rectangle(tileset.margin + (x * tileset.tilewidth), tileset.margin + (y * tileset.tileheight), tileset.tilewidth, tileset.tileheight));
+						x++;
+						if((i+1) % width == 0) {
+							x = 0;
+							y++;
+						}
+						gid++;
+					};
+
+					console.log(img_width + 'x' + img_height);
+					console.log(tile_width + 'x' + tile_height);
+					console.log(width + 'x' + height);
+					console.log(count);
 				});
 
 				$.each(map.layers, function(i, layer) {
@@ -26,8 +86,19 @@
 					if(layer.visible == true) {
 						switch(layer.type) {
 							case 'tilelayer':
+								var x = layer.x * Game.tilewidth * Game.tilescale, y = layer.y * Game.tileheight * Game.tilescale;
 								$.each(layer.data, function(i, tile) {
-									$('#map').append(tile + (((i+1) % layer.width == 0) ? '<br />' : ''));
+									if(tile != 0) {
+										var tile = new PIXI.Sprite(Game.tiles[tile]);
+										tile.scale = new PIXI.Point(Game.tilescale, Game.tilescale);
+										tile.position = new PIXI.Point(x * Game.tilewidth * Game.tilescale, y * Game.tileheight * Game.tilescale);
+										Game.stage.addChild(tile);
+									}
+									x++;
+									if((i+1) % layer.width == 0) {
+										y++;
+										x = 0;
+									}
 								});
 							break;
 						}
@@ -35,28 +106,16 @@
 					console.log("Done.");
 				});
 				console.log('Finished.');
-
+			}).done(function(){
+				console.log(Game.tilesets);
 			});
 		}
-		load_map('assets/maps/test-1.json');
 
-		var stage = new PIXI.Stage(0x66FF99);
-		var renderer = PIXI.autoDetectRenderer(900, 600);
-		document.body.appendChild(renderer.view);
-		PIXI.Texture.SCALE_MODE.DEFAULT = PIXI.Texture.SCALE_MODE.NEAREST;
+		Game.initialize();
+		Game.load_map('assets/maps/test-1.json');
 
-		var grass_tex = PIXI.Texture.fromImage("assets/grass.png");
-		var grass = new PIXI.Sprite(grass_tex);
-		grass.scale = new PIXI.Point(2, 2);
-		
-		stage.addChild(grass);
-
-		requestAnimFrame( animate );
-		function animate() {
-			requestAnimFrame( animate );
-
-			// render the stage   
-			renderer.render(stage);
+		Game.onUpdate = function() {
+			//console.log('frame');
 		}
 	</script>
 	<div id="map">
