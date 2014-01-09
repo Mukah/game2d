@@ -8,9 +8,14 @@
 			background-color: #000000;
 		}
 	</style>
-	<script src="pixi.js"></script>
-	<script src="jquery-1.10.2.min.js"></script>
-	<script src="tweenjs-0.5.1.min.js"></script>
+	<script src="assets/scripts/pixi.js"></script>
+	<script src="assets/scripts/jquery-1.10.2.min.js"></script>
+	<script src="assets/scripts/tween/jquery.gsap.min.js"></script>
+	<script src="assets/scripts/tween/TimelineLite.min.js"></script>
+	<script src="assets/scripts/tween/TimelineMax.min.js"></script>
+	<script src="assets/scripts/tween/TweenLite.min.js"></script>
+	<script src="assets/scripts/tween/TweenMax.min.js"></script>
+	<script src="assets/scripts/tween/easing/EasePack.min.js"></script>
 </head>
 <body>
 	<script>
@@ -116,10 +121,12 @@
 			}).done(function(){
 				console.log('Finished.');
 
-					Tween.get(map_container).to({alpha:0}, 1000).call(handleComplete);
-				    function handleComplete() {
-				        //Tween complete
-				    }
+					var tl = new TimelineMax({onUpdate: Game.animate, onUpdateScope: Game.stage, onComplete: teste});
+					tl.to(map_container.position, 1, {x: 200});
+
+					function teste(){
+						console.log("dksapkdsad");
+					}
 			});
 		}
 
@@ -130,7 +137,8 @@
 			//console.log('frame');
 		}
 	</script>
-	<div id="map">
+	<div id="map" style="color: #FFF">
+	testse
 	</div>
 	</body>
 </html>

@@ -1,12 +1,19 @@
 # Pixi.js
 
 GIT: https://github.com/GoodBoyDigital/pixi.js
-Doc: http://www.goodboydigital.com/pixijs/docs/
-Forum: http://www.html5gamedevs.com/forum/15-pixijs/
+Doc: http://www.goodboydigital.com/pixijs/docs
+Forum: http://www.html5gamedevs.com/forum/15-pixijs
 Guides: https://github.com/GoodBoyDigital/pixi.js/wiki/Resources
 
 # Tiled Map Editor
 
-Website: http://www.mapeditor.org/
+Website: http://www.mapeditor.org
 Wiki: https://github.com/bjorn/tiled/wiki
 Doc: https://github.com/bjorn/tiled/wiki/TMX-Map-Format
+
+# Tween GSAP
+
+Website: http://www.greensock.com/gsap-js
+Git: https://github.com/greensock/GreenSock-JS
+Doc: http://api.greensock.com/js
+Guides: http://www.greensock.com/get-started-js
