@@ -121,8 +121,8 @@
 			}).done(function(){
 				console.log('Finished.');
 
-					var tl = new TimelineMax({onUpdate: Game.animate, onUpdateScope: Game.stage, onComplete: teste});
-					tl.to(map_container.position, 1, {x: 200});
+					var tl = new TimelineLite({onUpdate: Game.animate, onUpdateScope: Game.stage, onComplete: teste});
+					tl.to(map_container, 1, {alpha: 0, ease:Linear.easeNone});
 
 					function teste(){
 						console.log("dksapkdsad");
