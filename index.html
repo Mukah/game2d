@@ -51,6 +51,7 @@
 		}
 		Game.load_map = function(url) {
 			map_container = new PIXI.DisplayObjectContainer();
+			map_container.alpha = 0;
 			Game.stage.addChild(map_container);
 
 			console.log('Loading map \'' + url + '\'...');
@@ -121,12 +122,14 @@
 			}).done(function(){
 				console.log('Finished.');
 
-					var tl = new TimelineLite({onUpdate: Game.animate, onUpdateScope: Game.stage, onComplete: teste});
-					tl.to(map_container, 1, {alpha: 0, ease:Linear.easeNone});
+				TweenLite.ticker.fps(60);
+				TweenLite.ticker.useRAF(false);
+				var tl = new TimelineLite({onUpdate: Game.animate, onUpdateScope: Game.stage, onComplete: teste});
+				tl.to(map_container, 1, {alpha: 1, ease:Linear.easeNone});
 
-					function teste(){
-						console.log("dksapkdsad");
-					}
+				function teste(){
+					console.log("dksapkdsad");
+				}
 			});
 		}
 
