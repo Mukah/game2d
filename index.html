@@ -86,16 +86,16 @@
 
 				Game.viewport.filters = [blurFilter];
 
-				var tl = new TimelineLite({
+				var t1 = new TimelineLite({
 					// options
 				}).to(Game.viewport.position, 1, {
 					x: this.position.x,
 					y: this.position.y,
-					ease: Strong.easeInOut
+					ease: Power3.easeInOut
 				})
 
 				// Testing filters
-				var t1 = new TimelineLite({
+				var t2 = new TimelineLite({
 					// options
 				}).to(blurFilter, 0.5, {
 					blur: 0.1,
