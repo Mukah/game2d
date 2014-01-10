@@ -48,7 +48,7 @@
 
 			PIXI.Texture.SCALE_MODE.DEFAULT = PIXI.Texture.SCALE_MODE.NEAREST;
 			TweenLite.ticker.fps(60);
-			//TweenLite.ticker.useRAF(true);
+			//TweenLite.ticker.useRAF(false);
 
 			// Add viewport to stage
 			Game.stage.addChild(Game.viewport);
@@ -83,7 +83,7 @@
 			}
 			this.smoothFocus = function() {
 				var blurFilter = new PIXI.BlurFilter();
-
+				blurFilter.blur = 0;
 				Game.viewport.filters = [blurFilter];
 
 				var t1 = new TimelineLite({
@@ -93,17 +93,15 @@
 					y: this.position.y,
 					ease: Power3.easeInOut
 				})
-
-				// Testing filters
 				var t2 = new TimelineLite({
 					// options
 				}).to(blurFilter, 0.5, {
-					blur: 0.1,
-					ease: Strong.easeIn
+					blur: 50,
+					ease: Power3.easeIn
 				}).to(blurFilter, 0.5, {
 					blur: 0,
-					ease: Strong.easeOut
-				});
+					ease: Power3.easeOut
+				})
 			}
 		};
 
