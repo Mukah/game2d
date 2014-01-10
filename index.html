@@ -19,17 +19,32 @@
 </head>
 <body>
 	<script>
-		function Game() {
-		}
+		// GAME
+		function Game() { }
 		Game.stage = undefined;
 		Game.renderer = undefined;
+		Game.stageWidth = 900;
+		Game.stageHeight = 600;
+		Game.viewport = new PIXI.DisplayObjectContainer();
+		Game.mapContainer = undefined;
+		Game.setCamera = function() {
 
-		Game.tilesets = undefined;
-		Game.tiles = undefined;
-		Game.tilewidth = undefined;
-		Game.tileheight = undefined;
-		Game.tilescale = 2;
-		var map_container;
+		}
+
+		Game.initialize = function() {
+			Game.stage = new PIXI.Stage(0x5996FF);
+			Game.renderer = PIXI.autoDetectRenderer(Game.stageWidth, Game.stageHeight);
+			document.body.appendChild(Game.renderer.view);
+
+			PIXI.Texture.SCALE_MODE.DEFAULT = PIXI.Texture.SCALE_MODE.NEAREST;
+			TweenLite.ticker.fps(60);
+			TweenLite.ticker.useRAF(true);
+
+			// Add viewport to stage
+			Game.stage.addChild(Game.viewport);
+
+			requestAnimFrame(Game.animate);
+		};
 
 		Game.animate = function() {
 			requestAnimFrame(Game.animate);
@@ -40,30 +55,72 @@
 			// Render the stage   
 			Game.renderer.render(Game.stage);
 		};
-		Game.onUpdate = function() {};
+		Game.onUpdate = function() { };
 
-		Game.initialize = function() {
-			Game.stage = new PIXI.Stage(0x5996FF);
-			Game.renderer = PIXI.autoDetectRenderer(900, 600);
-			document.body.appendChild(Game.renderer.view);
-			PIXI.Texture.SCALE_MODE.DEFAULT = PIXI.Texture.SCALE_MODE.NEAREST;
-			requestAnimFrame(Game.animate);
-		}
-		Game.load_map = function(url) {
-			map_container = new PIXI.DisplayObjectContainer();
-			map_container.alpha = 0;
-			Game.stage.addChild(map_container);
+		// CAMERA
+		function Camera() {
+			this.position = new PIXI.Point(0, 0);
+
+			this.centerAt = function(point) {
+				this.position.x = (Game.stageWidth / 2) - point.x;
+				this.position.y = (Game.stageHeight / 2) - point.y;
+			}
+			this.focus = function() {
+				Game.viewport.position.x = this.position.x;
+				Game.viewport.position.y = this.position.y;
+			}
+			this.smoothFocus = function() {
+				var blurFilter = new PIXI.BlurFilter();
+
+				Game.viewport.filters = [blurFilter];
+
+				var tl = new TimelineLite({
+					onUpdate: Game.animate,
+					onUpdateScope: Game.stage
+				}).to(Game.viewport.position, 1, {
+					x: this.position.x,
+					y: this.position.y,
+					ease: Strong.easeInOut
+				})
+
+				// Testing filters
+				var t1 = new TimelineLite({
+					onUpdate: Game.animate,
+					onUpdateScope: Game.stage
+				}).to(blurFilter, 0.5, {
+					blur: 0.1,
+					ease: Strong.easeIn
+				}).to(blurFilter, 0.5, {
+					blur: 0,
+					ease: Strong.easeOut
+				});
+			}
+		};
+
+		// MAP
+		function Map() { }
+		Map.tilesets = undefined;
+		Map.tiles = undefined;
+		Map.tileWidth = undefined;
+		Map.tileHeight = undefined;
+		Map.tileScale = new PIXI.Point(2, 2);
+
+		Map.load = function(url) {
+			Game.mapContainer = new PIXI.DisplayObjectContainer();
+			Game.mapContainer.alpha = 0;
+			Game.viewport.addChild(Game.mapContainer);
 
 			console.log('Loading map \'' + url + '\'...');
 			$.getJSON(url, function(map) {
 				// Tilesets loading
-				Game.tilesets = new Object();
-				Game.tiles = new Object();
-				Game.tilewidth = map.tilewidth;
-				Game.tileheight = map.tileheight;
+				Map.tilesets = new Object();
+				Map.tiles = new Object();
+				Map.tileWidth = map.tilewidth;
+				Map.tileHeight = map.tileheight;
+
 				$.each(map.tilesets, function(i, tileset) {
 					console.log('\'' + tileset.name + '\' loaded.')
-					Game.tilesets[tileset.name] = new PIXI.BaseTexture.fromImage(tileset.image);
+					Map.tilesets[tileset.name] = new PIXI.BaseTexture.fromImage(tileset.image);
 					
 					var img_width = tileset.imagewidth + (tileset.margin * 2);
 					var img_height = tileset.imageheight + (tileset.margin * 2);
@@ -76,7 +133,7 @@
 					var x = 0, y = 0;
 					var gid = tileset.firstgid;
 					for (var i = 0; i < count; i++) {
-						Game.tiles[gid] = new PIXI.Texture(Game.tilesets[tileset.name], new PIXI.Rectangle(tileset.margin + (x * tileset.tilewidth), tileset.margin + (y * tileset.tileheight), tileset.tilewidth, tileset.tileheight));
+						Map.tiles[gid] = new PIXI.Texture(Map.tilesets[tileset.name], new PIXI.Rectangle(tileset.margin + (x * tileset.tilewidth), tileset.margin + (y * tileset.tileheight), tileset.tilewidth, tileset.tileheight));
 						x++;
 						if((i+1) % width == 0) {
 							x = 0;
@@ -91,22 +148,20 @@
 					//console.log(count);
 				});
 
+				// Drawing
 				$.each(map.layers, function(i, layer) {
 					console.log('Drawing \'' + layer.name + '\'...')
-
 
 					if(layer.visible == true) {
 						switch(layer.type) {
 							case 'tilelayer':
-								var x = layer.x * Game.tilewidth * Game.tilescale, y = layer.y * Game.tileheight * Game.tilescale;
+								var x = layer.x * Map.tileWidth * Map.tileScale.x, y = layer.y * Map.tileHeight * Map.tileScale.y;
 								$.each(layer.data, function(i, tile) {
 									if(tile != 0) {
-										var tile = new PIXI.Sprite(Game.tiles[tile]);
-										tile.scale = new PIXI.Point(Game.tilescale, Game.tilescale);
-										tile.position = new PIXI.Point(x * Game.tilewidth * Game.tilescale, y * Game.tileheight * Game.tilescale);
-										Game.stage.addChild(tile);
-
-										map_container.addChild(tile);
+										var tile = new PIXI.Sprite(Map.tiles[tile]);
+										tile.scale = Map.tileScale;
+										tile.position = new PIXI.Point(x * Map.tileWidth * Map.tileScale.x, y * Map.tileHeight * Map.tileScale.y);
+										Game.mapContainer.addChild(tile);
 									}
 									x++;
 									if((i+1) % layer.width == 0) {
@@ -122,26 +177,41 @@
 			}).done(function(){
 				console.log('Finished.');
 
-				TweenLite.ticker.fps(60);
-				TweenLite.ticker.useRAF(false);
-				var tl = new TimelineLite({onUpdate: Game.animate, onUpdateScope: Game.stage, onComplete: teste});
-				tl.to(map_container, 1, {alpha: 1, ease:Linear.easeNone});
+				var tl = new TimelineLite({
+					onUpdate: Game.animate,
+					onUpdateScope: Game.stage,
+					onComplete: callback
+				}).to(Game.mapContainer, 1, {
+					alpha: 1,
+					ease: Linear.easeNone
+				});
 
-				function teste(){
-					console.log("dksapkdsad");
+				function callback() {
+					console.log("Animation finished.");
 				}
 			});
-		}
+		};
+
+		Map.clear = function() {
+			if(Game.mapContainer != undefined){
+				Game.stage.removeChild(Game.mapContainer);
+				Game.mapContainer = undefined;
+				console.log("Map cleaned.")
+			}
+		};
+
 
 		Game.initialize();
-		Game.load_map('assets/maps/test-1.json');
+		Map.load('assets/maps/test-1.json');
+		var camera1 = new Camera();
+		camera1.centerAt(new PIXI.Point(500, 500));
+		var camera2 = new Camera();
+		camera2.centerAt(new PIXI.Point(1600, 1600));
+		
 
 		Game.onUpdate = function() {
 			//console.log('frame');
 		}
 	</script>
-	<div id="map" style="color: #FFF">
-	testse
-	</div>
 	</body>
 </html>
