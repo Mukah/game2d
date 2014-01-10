@@ -16,6 +16,7 @@
 	<script src="assets/scripts/tween/TweenLite.min.js"></script>
 	<script src="assets/scripts/tween/TweenMax.min.js"></script>
 	<script src="assets/scripts/tween/easing/EasePack.min.js"></script>
+	<script src="assets/scripts/stats.min.js"></script>
 </head>
 <body>
 	<script>
@@ -27,10 +28,19 @@
 		Game.stageHeight = 600;
 		Game.viewport = new PIXI.DisplayObjectContainer();
 		Game.mapContainer = undefined;
-		Game.setCamera = function() {
 
-		}
+		// Stats
+		var stats = new Stats();
+		stats.setMode(0); // 0: fps, 1: ms
 
+		// Align top-left
+		stats.domElement.style.position = 'absolute';
+		stats.domElement.style.left = '0px';
+		stats.domElement.style.top = '0px';
+
+		document.body.appendChild(stats.domElement);
+
+		
 		Game.initialize = function() {
 			Game.stage = new PIXI.Stage(0x5996FF);
 			Game.renderer = PIXI.autoDetectRenderer(Game.stageWidth, Game.stageHeight);
@@ -38,7 +48,7 @@
 
 			PIXI.Texture.SCALE_MODE.DEFAULT = PIXI.Texture.SCALE_MODE.NEAREST;
 			TweenLite.ticker.fps(60);
-			TweenLite.ticker.useRAF(true);
+			//TweenLite.ticker.useRAF(true);
 
 			// Add viewport to stage
 			Game.stage.addChild(Game.viewport);
@@ -47,6 +57,7 @@
 		};
 
 		Game.animate = function() {
+			stats.begin();
 			requestAnimFrame(Game.animate);
 
 			// Execute update block
@@ -54,6 +65,7 @@
 
 			// Render the stage   
 			Game.renderer.render(Game.stage);
+			stats.end();
 		};
 		Game.onUpdate = function() { };
 
@@ -75,8 +87,7 @@
 				Game.viewport.filters = [blurFilter];
 
 				var tl = new TimelineLite({
-					onUpdate: Game.animate,
-					onUpdateScope: Game.stage
+					// options
 				}).to(Game.viewport.position, 1, {
 					x: this.position.x,
 					y: this.position.y,
@@ -85,8 +96,7 @@
 
 				// Testing filters
 				var t1 = new TimelineLite({
-					onUpdate: Game.animate,
-					onUpdateScope: Game.stage
+					// options
 				}).to(blurFilter, 0.5, {
 					blur: 0.1,
 					ease: Strong.easeIn
@@ -177,9 +187,7 @@
 			}).done(function(){
 				console.log('Finished.');
 
-				var tl = new TimelineLite({
-					onUpdate: Game.animate,
-					onUpdateScope: Game.stage,
+				var tl = new TimelineLite({					
 					onComplete: callback
 				}).to(Game.mapContainer, 1, {
 					alpha: 1,
@@ -203,11 +211,12 @@
 
 		Game.initialize();
 		Map.load('assets/maps/test-1.json');
+
 		var camera1 = new Camera();
 		camera1.centerAt(new PIXI.Point(500, 500));
+
 		var camera2 = new Camera();
 		camera2.centerAt(new PIXI.Point(1600, 1600));
-		
 
 		Game.onUpdate = function() {
 			//console.log('frame');
