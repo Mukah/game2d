@@ -20,11 +20,9 @@
 </head>
 <body>
 	<script>
-		// Stats
+		// STATS
 		var stats = new Stats();
 		stats.setMode(0); // 0: fps, 1: ms
-
-		// Align top-left
 		stats.domElement.style.position = 'absolute';
 		stats.domElement.style.left = '0px';
 		stats.domElement.style.top = '0px';
@@ -72,19 +70,23 @@
 			Game.renderer.render(Game.stage);
 			stats.end();
 		};
+
 		Game.onUpdate = function() { };
 
 		// CAMERA
 		function Camera() {
 			this.position = new PIXI.Point(0, 0);
+			this.targetObject = undefined; 
 
 			this.centerAt = function(point) {
 				this.position.x = (Game.stageWidth / 2) - point.x;
 				this.position.y = (Game.stageHeight / 2) - point.y;
+				return this;
 			}
 			this.focus = function() {
 				Game.viewport.position.x = this.position.x;
 				Game.viewport.position.y = this.position.y;
+				return this;
 			}
 			this.smoothFocus = function() {
 				var blurFilter = new PIXI.BlurFilter();
@@ -108,19 +110,17 @@
 					blur: 0,
 					ease: Power3.easeOut
 				})
-			}
-			this.follow = function() {
-
+				return this;
 			}
 		};
 
 		// TILE
 		function Tile() {
 			this.texture = undefined;
-			this.properties = new Object();
+			this.properties = undefined;
 
-			this.collides = function(){
-				if(this.properties['collides'] != undefined && this.properties['collides'] == 'true') {
+			this.collides = function() {
+				if(this.properties != undefined && this.properties['collides'] == 'true') {
 					return true;
 				}
 				return false;
@@ -203,12 +203,11 @@
 							break;
 						}
 					}
-					console.log("Done.");
 				});
 			}).done(function(){
 				console.log('Finished.');
 
-				var tl = new TimelineLite({					
+				var tl = new TimelineLite({				
 					onComplete: callback
 				}).to(Game.mapContainer, 1, {
 					alpha: 1,
@@ -217,7 +216,22 @@
 
 				function callback() {
 					console.log("Animation finished.");
-					camera2.smoothFocus();
+					//camera2.smoothFocus();
+					var teste = new PIXI.Sprite(Map.tiles[1].texture);
+					Game.viewport.addChild(teste);
+
+					var camera3 = new Camera();
+					//camera3.follow(teste);
+					camera3.focus(teste);
+					console.log(camera3.targ);
+
+					var t1 = new TimelineLite({
+						//onUpdate: camera3.follow,
+						//onUpdateScope: camera3,
+						onComplete: function(){ t1.reverse(); }
+					}).to(teste.position, 3, {
+						x: 1600
+					});
 				}
 			});
 		};
@@ -230,7 +244,6 @@
 			}
 		};
 
-
 		Game.initialize();
 		Map.load('assets/maps/test-1.json');
 
@@ -238,8 +251,6 @@
 		camera1.centerAt(new PIXI.Point(500, 500));
 		var camera2 = new Camera();
 		camera2.centerAt(new PIXI.Point(1000, 1000));
-
-
 
 		Game.onUpdate = function() {
 			//console.log('frame');
