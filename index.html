@@ -76,7 +76,6 @@
 		// CAMERA
 		function Camera() {
 			this.position = new PIXI.Point(0, 0);
-			this.targetObject = undefined; 
 
 			this.centerAt = function(point) {
 				this.position.x = (Game.stageWidth / 2) - point.x;
@@ -114,6 +113,12 @@
 			}
 		};
 
+		// CREATURES
+		function Creature(name) {
+			this.name = name;
+
+		}
+
 		// TILE
 		function Tile() {
 			this.texture = undefined;
@@ -135,7 +140,7 @@
 		Map.tileHeight = undefined;
 		Map.tileScale = new PIXI.Point(2, 2);
 
-		Map.load = function(url) {
+		Map.load = function(url, onComplete) {
 			Game.mapContainer = new PIXI.DisplayObjectContainer();
 			Game.mapContainer.alpha = 0;
 			Game.viewport.addChild(Game.mapContainer);
@@ -181,7 +186,6 @@
 				// Drawing
 				$.each(map.layers, function(i, layer) {
 					console.log('Drawing \'' + layer.name + '\'...')
-
 					if(layer.visible == true) {
 						switch(layer.type) {
 							case 'tilelayer':
@@ -204,36 +208,8 @@
 						}
 					}
 				});
-			}).done(function(){
-				console.log('Finished.');
-
-				var tl = new TimelineLite({				
-					onComplete: callback
-				}).to(Game.mapContainer, 1, {
-					alpha: 1,
-					ease: Linear.easeNone
-				});
-
-				function callback() {
-					console.log("Animation finished.");
-					//camera2.smoothFocus();
-					var teste = new PIXI.Sprite(Map.tiles[1].texture);
-					Game.viewport.addChild(teste);
-
-					var camera3 = new Camera();
-					//camera3.follow(teste);
-					camera3.focus(teste);
-					console.log(camera3.targ);
-
-					var t1 = new TimelineLite({
-						//onUpdate: camera3.follow,
-						//onUpdateScope: camera3,
-						onComplete: function(){ t1.reverse(); }
-					}).to(teste.position, 3, {
-						x: 1600
-					});
-				}
-			});
+				console.log("Finished.");
+			}).done(onComplete);
 		};
 
 		Map.clear = function() {
@@ -245,10 +221,37 @@
 		};
 
 		Game.initialize();
-		Map.load('assets/maps/test-1.json');
+		Map.load('assets/maps/test-1.json', function() {
+			console.log('Done.');
+
+			var tl = new TimelineLite({				
+				onComplete: callback
+			}).to(Game.mapContainer, 1, {
+				alpha: 1,
+				ease: Linear.easeNone
+			});
+
+			function callback() {
+				console.log("Animation finished.");
+				//camera2.smoothFocus();					
+
+				var teste = new PIXI.Sprite(Map.tiles[1].texture);
+				Game.viewport.addChild(teste);
+
+				var camera3 = new Camera();
+				camera3.focus(teste);
+
+				var t1 = new TimelineLite({
+					onComplete: function(){ t1.reverse(); }
+				}).to(teste.position, 3, {
+					x: 1600
+				});
+			}
+		});
 
 		var camera1 = new Camera();
 		camera1.centerAt(new PIXI.Point(500, 500));
+
 		var camera2 = new Camera();
 		camera2.centerAt(new PIXI.Point(1000, 1000));
 
