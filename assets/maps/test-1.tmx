@@ -4,33 +4,20 @@
   <image source="tileset-1.png" width="480" height="256"/>
   <terraintypes>
    <terrain name="Terra" tile="67"/>
-   <terrain name="Novo Terreno" tile="307"/>
-   <terrain name="Novo Terreno" tile="430"/>
   </terraintypes>
-  <tile id="36" terrain="0,0,0,"/>
-  <tile id="37" terrain="0,0,,"/>
-  <tile id="38" terrain="0,0,,0"/>
-  <tile id="66" terrain="0,,0,"/>
-  <tile id="68" terrain=",0,,0"/>
-  <tile id="96" terrain="0,,0,0"/>
-  <tile id="97" terrain=",,0,0"/>
-  <tile id="98" terrain=",0,0,0"/>
-  <tile id="276" terrain="1,1,1,"/>
-  <tile id="277" terrain="1,1,,"/>
-  <tile id="278" terrain="1,1,,1"/>
-  <tile id="306" terrain="1,,1,"/>
-  <tile id="308" terrain=",1,,1"/>
-  <tile id="336" terrain="1,,1,1"/>
-  <tile id="337" terrain=",,1,1"/>
-  <tile id="338" terrain=",1,1,1"/>
-  <tile id="399" terrain="2,2,2,"/>
-  <tile id="400" terrain="2,2,,"/>
-  <tile id="401" terrain="2,2,,2"/>
-  <tile id="429" terrain="2,,2,"/>
-  <tile id="431" terrain=",2,,2"/>
-  <tile id="459" terrain="2,,2,2"/>
-  <tile id="460" terrain=",,2,2"/>
-  <tile id="461" terrain=",2,2,2"/>
+  <tile id="36" terrain=",,,0"/>
+  <tile id="37" terrain=",,0,0"/>
+  <tile id="38" terrain=",,0,"/>
+  <tile id="66" terrain=",0,,0"/>
+  <tile id="67" terrain="0,0,0,0">
+   <properties>
+    <property name="teste" value="aeaeae"/>
+   </properties>
+  </tile>
+  <tile id="68" terrain="0,,0,"/>
+  <tile id="96" terrain=",0,,"/>
+  <tile id="97" terrain="0,0,,"/>
+  <tile id="98" terrain="0,,,"/>
  </tileset>
  <layer name="Camada de Tiles 1" width="50" height="50">
   <data>

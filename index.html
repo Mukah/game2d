@@ -20,15 +20,6 @@
 </head>
 <body>
 	<script>
-		// GAME
-		function Game() { }
-		Game.stage = undefined;
-		Game.renderer = undefined;
-		Game.stageWidth = 900;
-		Game.stageHeight = 600;
-		Game.viewport = new PIXI.DisplayObjectContainer();
-		Game.mapContainer = undefined;
-
 		// Stats
 		var stats = new Stats();
 		stats.setMode(0); // 0: fps, 1: ms
@@ -40,12 +31,22 @@
 
 		document.body.appendChild(stats.domElement);
 
-		
+		// GAME
+		function Game() { }
+		Game.stage = undefined;
+		Game.renderer = undefined;
+		Game.stageWidth = 900;
+		Game.stageHeight = 600;
+		Game.viewport = new PIXI.DisplayObjectContainer();
+		Game.mapContainer = undefined;
+		Game.GUIContainer = new PIXI.DisplayObjectContainer();
+
 		Game.initialize = function() {
 			Game.stage = new PIXI.Stage(0x5996FF);
 			Game.renderer = PIXI.autoDetectRenderer(Game.stageWidth, Game.stageHeight);
 			document.body.appendChild(Game.renderer.view);
 
+			// Some settings
 			PIXI.Texture.SCALE_MODE.DEFAULT = PIXI.Texture.SCALE_MODE.NEAREST;
 			TweenLite.ticker.fps(60);
 			//TweenLite.ticker.useRAF(false);
@@ -53,6 +54,10 @@
 			// Add viewport to stage
 			Game.stage.addChild(Game.viewport);
 
+			// Add GUI container to stage
+			Game.stage.addChild(Game.GUIContainer);
+
+			// Initialize RAF
 			requestAnimFrame(Game.animate);
 		};
 
@@ -84,6 +89,7 @@
 			this.smoothFocus = function() {
 				var blurFilter = new PIXI.BlurFilter();
 				blurFilter.blur = 0;
+
 				Game.viewport.filters = [blurFilter];
 
 				var t1 = new TimelineLite({
@@ -103,7 +109,23 @@
 					ease: Power3.easeOut
 				})
 			}
+			this.follow = function() {
+
+			}
 		};
+
+		// TILE
+		function Tile() {
+			this.texture = undefined;
+			this.properties = new Object();
+
+			this.collides = function(){
+				if(this.properties['collides'] != undefined && this.properties['collides'] == 'true') {
+					return true;
+				}
+				return false;
+			}
+		}
 
 		// MAP
 		function Map() { }
@@ -141,7 +163,12 @@
 					var x = 0, y = 0;
 					var gid = tileset.firstgid;
 					for (var i = 0; i < count; i++) {
-						Map.tiles[gid] = new PIXI.Texture(Map.tilesets[tileset.name], new PIXI.Rectangle(tileset.margin + (x * tileset.tilewidth), tileset.margin + (y * tileset.tileheight), tileset.tilewidth, tileset.tileheight));
+						// Instantiate tiles
+						var tile = new Tile();
+						tile.texture = new PIXI.Texture(Map.tilesets[tileset.name], new PIXI.Rectangle(tileset.margin + (x * tileset.tilewidth), tileset.margin + (y * tileset.tileheight), tileset.tilewidth, tileset.tileheight));
+						tile.properties = tileset.tileproperties[gid];
+						Map.tiles[gid] = tile;
+
 						x++;
 						if((i+1) % width == 0) {
 							x = 0;
@@ -149,11 +176,6 @@
 						}
 						gid++;
 					};
-
-					//console.log(img_width + 'x' + img_height);
-					//console.log(tile_width + 'x' + tile_height);
-					//console.log(width + 'x' + height);
-					//console.log(count);
 				});
 
 				// Drawing
@@ -166,11 +188,12 @@
 								var x = layer.x * Map.tileWidth * Map.tileScale.x, y = layer.y * Map.tileHeight * Map.tileScale.y;
 								$.each(layer.data, function(i, tile) {
 									if(tile != 0) {
-										var tile = new PIXI.Sprite(Map.tiles[tile]);
+										var tile = new PIXI.Sprite(Map.tiles[tile].texture);
 										tile.scale = Map.tileScale;
 										tile.position = new PIXI.Point(x * Map.tileWidth * Map.tileScale.x, y * Map.tileHeight * Map.tileScale.y);
 										Game.mapContainer.addChild(tile);
 									}
+
 									x++;
 									if((i+1) % layer.width == 0) {
 										y++;
@@ -194,6 +217,7 @@
 
 				function callback() {
 					console.log("Animation finished.");
+					camera2.smoothFocus();
 				}
 			});
 		};
@@ -202,7 +226,7 @@
 			if(Game.mapContainer != undefined){
 				Game.stage.removeChild(Game.mapContainer);
 				Game.mapContainer = undefined;
-				console.log("Map cleaned.")
+				console.log("Map cleaned.");
 			}
 		};
 
@@ -212,9 +236,10 @@
 
 		var camera1 = new Camera();
 		camera1.centerAt(new PIXI.Point(500, 500));
-
 		var camera2 = new Camera();
-		camera2.centerAt(new PIXI.Point(1600, 1600));
+		camera2.centerAt(new PIXI.Point(1000, 1000));
+
+
 
 		Game.onUpdate = function() {
 			//console.log('frame');

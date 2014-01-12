@@ -41,7 +41,58 @@
 
             },
          "spacing":0,
+         "terrains":[
+                {
+                 "name":"Terra",
+                 "tile":67
+                }],
          "tileheight":16,
+         "tileproperties":
+            {
+             "67":
+                {
+                 "teste":"aeaeae"
+                }
+            },
+         "tiles":
+            {
+             "36":
+                {
+                 "terrain":[-1, -1, -1, 0]
+                },
+             "37":
+                {
+                 "terrain":[-1, -1, 0, 0]
+                },
+             "38":
+                {
+                 "terrain":[-1, -1, 0, -1]
+                },
+             "66":
+                {
+                 "terrain":[-1, 0, -1, 0]
+                },
+             "67":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "68":
+                {
+                 "terrain":[0, -1, 0, -1]
+                },
+             "96":
+                {
+                 "terrain":[-1, 0, -1, -1]
+                },
+             "97":
+                {
+                 "terrain":[0, 0, -1, -1]
+                },
+             "98":
+                {
+                 "terrain":[0, -1, -1, -1]
+                }
+            },
          "tilewidth":16
         }],
  "tilewidth":16,
