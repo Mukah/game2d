@@ -99,7 +99,7 @@
 					x: this.position.x,
 					y: this.position.y,
 					ease: Power3.easeInOut
-				})
+				});
 				var t2 = new TimelineLite({
 					// options
 				}).to(blurFilter, 0.5, {
@@ -108,15 +108,65 @@
 				}).to(blurFilter, 0.5, {
 					blur: 0,
 					ease: Power3.easeOut
-				})
+				});
 				return this;
 			}
 		};
 
-		// CREATURES
-		function Creature(name) {
-			this.name = name;
+		// DIRECTIONS
+		function DIRECTIONS() { }
+		DIRECTIONS.UP = 0;
+		DIRECTIONS.RIGHT = 1;
+		DIRECTIONS.DOWN = 2;
+		DIRECTIONS.LEFT = 3;
 
+		// CREATURES
+		function Creature(name, texture) {
+			this.name = name;
+			this.position = new PIXI.Point(0, 0);
+			this.healthNow = 0;
+			this.healthMax = 0;
+			this.walkSpeed = 0.1;
+
+			this.sprite = new PIXI.Sprite(texture);
+			this.sprite.scale = Map.tileScale;
+
+			var timeline = new TimelineLite();
+
+			this.setPosition = function(x, y) {
+				this.position.x = x;
+				this.position.y = y;
+
+				this.sprite.position.x = x * Map.tileWidth * Map.tileScale.x;
+				this.sprite.position.y = y * Map.tileHeight * Map.tileScale.y;
+				return this;
+			}
+			this.walk = function(direction) {
+				var toPosition = this.position.clone();
+
+				switch(direction){
+					case DIRECTIONS.UP:
+						toPosition.y--;
+						break;
+					case DIRECTIONS.RIGHT:
+						toPosition.x++;
+						break;
+					case DIRECTIONS.DOWN:
+						toPosition.y++;
+						break;
+					case DIRECTIONS.LEFT:
+						toPosition.x--;
+						break;
+				}
+
+				timeline.to(this.sprite.position, this.walkSpeed, {
+					x: toPosition.x * Map.tileWidth * Map.tileScale.x,
+					y: toPosition.y * Map.tileHeight * Map.tileScale.y,
+					ease: Linear.easeNone
+				});
+				this.position = toPosition;
+				return this;
+			}
 		}
 
 		// TILE
@@ -213,18 +263,20 @@
 		};
 
 		Map.clear = function() {
-			if(Game.mapContainer != undefined){
+			if(Game.mapContainer != undefined) {
 				Game.stage.removeChild(Game.mapContainer);
 				Game.mapContainer = undefined;
 				console.log("Map cleaned.");
 			}
 		};
 
+		var player;
+
 		Game.initialize();
 		Map.load('assets/maps/test-1.json', function() {
 			console.log('Done.');
 
-			var tl = new TimelineLite({				
+			var tl = new TimelineLite({
 				onComplete: callback
 			}).to(Game.mapContainer, 1, {
 				alpha: 1,
@@ -233,19 +285,11 @@
 
 			function callback() {
 				console.log("Animation finished.");
-				//camera2.smoothFocus();					
+				//camera2.smoothFocus();
 
-				var teste = new PIXI.Sprite(Map.tiles[1].texture);
-				Game.viewport.addChild(teste);
-
-				var camera3 = new Camera();
-				camera3.focus(teste);
-
-				var t1 = new TimelineLite({
-					onComplete: function(){ t1.reverse(); }
-				}).to(teste.position, 3, {
-					x: 1600
-				});
+				player = new Creature("Mukah", Map.tiles[1].texture);
+				Game.viewport.addChild(player.sprite);
+				player.setPosition(3, 3);
 			}
 		});
 
@@ -257,7 +301,7 @@
 
 		Game.onUpdate = function() {
 			//console.log('frame');
-		}
+		};
 	</script>
 	</body>
 </html>

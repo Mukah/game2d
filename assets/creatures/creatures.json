@@ -1,0 +1,11 @@
+{
+	"player": {
+		"name": "Mukah",
+		"type": "Human",
+		"health": {
+			"now": 100,
+			"max": 100,
+		},
+
+	}
+}
