@@ -5,6 +5,11 @@
   <terraintypes>
    <terrain name="Terra" tile="67"/>
   </terraintypes>
+  <tile id="9">
+   <properties>
+    <property name="collides" value="1"/>
+   </properties>
+  </tile>
   <tile id="36" terrain=",,,0"/>
   <tile id="37" terrain=",,0,0"/>
   <tile id="38" terrain=",,0,"/>
