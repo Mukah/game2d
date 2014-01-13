@@ -14,14 +14,13 @@ Map.load = function(url, onComplete) {
 
 	console.log('Loading map \'' + url + '\'...');
 	$.getJSON(url, function(map) {
+		console.log(map);
+
 		// Tilesets loading
 		Map.tilesets = new Object();
 		Map.tiles = new Object();
 		Map.tileWidth = map.tilewidth;
 		Map.tileHeight = map.tileheight;
-		Map.collision = new Object();
-
-		console.log(map);
 
 		$.each(map.tilesets, function(i, tileset) {
 			console.log('\'' + tileset.name + '\' loaded.')
@@ -54,6 +53,11 @@ Map.load = function(url, onComplete) {
 		});
 
 		// Drawing
+		var collision_map = new Array(map.height);
+		for (var i = 0; i < map.height; i++) {
+			collision_map[i] = new Array(map.width);
+		}
+
 		$.each(map.layers, function(i, layer) {
 			console.log('Drawing \'' + layer.name + '\'...')
 			if(layer.visible == true) {
@@ -70,16 +74,12 @@ Map.load = function(url, onComplete) {
 								sprite.position = new PIXI.Point(x * Map.tileWidth * Map.tileScale.x, y * Map.tileHeight * Map.tileScale.y);
 								Game.mapContainer.addChild(sprite);
 
-								if(i in Map.collision) {
-									if(Map.collision[i] == 0) {
-										Map.collision[i] = ((tile.collides()) ? 1 : 0);
-									}
-								} else {
-									Map.collision[i] = ((tile.collides()) ? 1 : 0);
+								if(collision_map[y][x] != 1) {
+									collision_map[y][x] = ((tile.collides()) ? 1 : 0);
 								}
 
 								// Highlight collision tiles
-								if(Map.collision[i] == 1) { sprite.tint = 0xFF0000; }
+								if(collision_map[y][x] == 1) { sprite.tint = 0xFF0000; }
 							}
 
 							x++;
@@ -92,6 +92,9 @@ Map.load = function(url, onComplete) {
 				}
 			}
 		});
+
+		Map.collision = new PF.Grid(map.width, map.height, collision_map);
+
 		console.log("Finished.");
 	}).done(onComplete);
 };

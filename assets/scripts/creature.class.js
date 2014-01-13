@@ -8,8 +8,16 @@ function Creature(name, texture) {
 
 	this.sprite = new PIXI.Sprite(texture);
 	this.sprite.scale = Map.tileScale;
+	this.sprite.alpha = 1;
 
-	var timeline = new TimelineLite();
+	var timeline = new TimelineLite({
+		paused: true,
+		onComplete: function() {
+			this.pause();
+			console.log("pause");
+		}
+	});
+	//timeline.from(this.sprite, 0, { alpha: 0});
 
 	this.setPosition = function(x, y) {
 		this.position.x = x;
@@ -37,12 +45,34 @@ function Creature(name, texture) {
 				break;
 		}
 
-		timeline.to(this.sprite.position, this.walkSpeed, {
-			x: toPosition.x * Map.tileWidth * Map.tileScale.x,
-			y: toPosition.y * Map.tileHeight * Map.tileScale.y,
-			ease: Linear.easeNone
-		});
-		this.position = toPosition;
+		this.moveTo(toPosition);
 		return this;
+	}
+	this.moveTo = function(toPosition) {
+		if(timeline.paused) {
+			timeline.resume();
+			timeline.add(TweenLite.to(this.sprite.position, this.walkSpeed, {
+				x: toPosition.x * Map.tileWidth * Map.tileScale.x,
+				y: toPosition.y * Map.tileHeight * Map.tileScale.y,
+				ease: Linear.easeNone,
+				onCompleteScope: this,
+				onComplete: function() {
+					this.position = toPosition;
+				}
+			}));
+		}
+		return this;
+	}
+	this.walkTo = function(toPosition) {
+		var collisionBackup = Map.collision.clone();
+		var finder = new PF.AStarFinder({
+			heuristic: PF.Heuristic.manhattan,
+			allowDiagonal: false
+		});
+		var path = finder.findPath(this.position.x, this.position.y, toPosition.x, toPosition.y, Map.collision);
+		for (var i = 0; i < path.length; i++) {
+			this.moveTo(new PIXI.Point(path[i][0], path[i][1]));
+		};
+		Map.collision = collisionBackup;
 	}
 }
