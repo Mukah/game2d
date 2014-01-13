@@ -8,15 +8,23 @@
 			background-color: #000000;
 		}
 	</style>
-	<script src="assets/scripts/pixi.js"></script>
-	<script src="assets/scripts/jquery-1.10.2.min.js"></script>
-	<script src="assets/scripts/tween/jquery.gsap.min.js"></script>
-	<script src="assets/scripts/tween/TimelineLite.min.js"></script>
-	<script src="assets/scripts/tween/TimelineMax.min.js"></script>
-	<script src="assets/scripts/tween/TweenLite.min.js"></script>
-	<script src="assets/scripts/tween/TweenMax.min.js"></script>
-	<script src="assets/scripts/tween/easing/EasePack.min.js"></script>
-	<script src="assets/scripts/stats.min.js"></script>
+	<script type="text/javascript" src="assets/scripts/pixi/pixi.js"></script>
+	<script type="text/javascript" src="assets/scripts/jquery/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="assets/scripts/stats/stats.min.js"></script>
+	<script type="text/javascript" src="assets/scripts/tween/jquery.gsap.min.js"></script>
+	<script type="text/javascript" src="assets/scripts/tween/TimelineLite.min.js"></script>
+	<script type="text/javascript" src="assets/scripts/tween/TimelineMax.min.js"></script>
+	<script type="text/javascript" src="assets/scripts/tween/TweenLite.min.js"></script>
+	<script type="text/javascript" src="assets/scripts/tween/TweenMax.min.js"></script>
+	<script type="text/javascript" src="assets/scripts/tween/easing/EasePack.min.js"></script>
+
+	<script type="text/javascript" src="assets/scripts/directions.enum.js"></script>
+
+	<script type="text/javascript" src="assets/scripts/game.class.js"></script>
+	<script type="text/javascript" src="assets/scripts/map.class.js"></script>
+	<script type="text/javascript" src="assets/scripts/camera.class.js"></script>
+	<script type="text/javascript" src="assets/scripts/tile.class.js"></script>
+	<script type="text/javascript" src="assets/scripts/creature.class.js"></script>
 </head>
 <body>
 	<script>
@@ -26,267 +34,7 @@
 		stats.domElement.style.position = 'absolute';
 		stats.domElement.style.left = '0px';
 		stats.domElement.style.top = '0px';
-
 		document.body.appendChild(stats.domElement);
-
-		// GAME
-		function Game() { }
-		Game.stage = undefined;
-		Game.renderer = undefined;
-		Game.stageWidth = 900;
-		Game.stageHeight = 600;
-		Game.viewport = new PIXI.DisplayObjectContainer();
-		Game.mapContainer = undefined;
-		Game.GUIContainer = new PIXI.DisplayObjectContainer();
-
-		Game.initialize = function() {
-			Game.stage = new PIXI.Stage(0x5996FF);
-			Game.renderer = PIXI.autoDetectRenderer(Game.stageWidth, Game.stageHeight);
-			document.body.appendChild(Game.renderer.view);
-
-			// Some settings
-			PIXI.Texture.SCALE_MODE.DEFAULT = PIXI.Texture.SCALE_MODE.NEAREST;
-			TweenLite.ticker.fps(60);
-			//TweenLite.ticker.useRAF(false);
-
-			// Add viewport to stage
-			Game.stage.addChild(Game.viewport);
-
-			// Add GUI container to stage
-			Game.stage.addChild(Game.GUIContainer);
-
-			// Initialize RAF
-			requestAnimFrame(Game.animate);
-		};
-
-		Game.animate = function() {
-			stats.begin();
-			requestAnimFrame(Game.animate);
-
-			// Execute update block
-			Game.onUpdate();
-
-			// Render the stage   
-			Game.renderer.render(Game.stage);
-			stats.end();
-		};
-
-		Game.onUpdate = function() { };
-
-		// CAMERA
-		function Camera() {
-			this.position = new PIXI.Point(0, 0);
-
-			this.centerAt = function(point) {
-				this.position.x = (Game.stageWidth / 2) - point.x;
-				this.position.y = (Game.stageHeight / 2) - point.y;
-				return this;
-			}
-			this.focus = function() {
-				Game.viewport.position.x = this.position.x;
-				Game.viewport.position.y = this.position.y;
-				return this;
-			}
-			this.smoothFocus = function() {
-				var blurFilter = new PIXI.BlurFilter();
-				blurFilter.blur = 0;
-
-				Game.viewport.filters = [blurFilter];
-
-				var t1 = new TimelineLite({
-					// options
-				}).to(Game.viewport.position, 1, {
-					x: this.position.x,
-					y: this.position.y,
-					ease: Power3.easeInOut
-				});
-				var t2 = new TimelineLite({
-					// options
-				}).to(blurFilter, 0.5, {
-					blur: 50,
-					ease: Power3.easeIn
-				}).to(blurFilter, 0.5, {
-					blur: 0,
-					ease: Power3.easeOut
-				});
-				return this;
-			}
-		};
-
-		// DIRECTIONS
-		function DIRECTIONS() { }
-		DIRECTIONS.UP = 0;
-		DIRECTIONS.RIGHT = 1;
-		DIRECTIONS.DOWN = 2;
-		DIRECTIONS.LEFT = 3;
-
-		// CREATURES
-		function Creature(name, texture) {
-			this.name = name;
-			this.position = new PIXI.Point(0, 0);
-			this.healthNow = 0;
-			this.healthMax = 0;
-			this.walkSpeed = 0.1;
-
-			this.sprite = new PIXI.Sprite(texture);
-			this.sprite.scale = Map.tileScale;
-
-			var timeline = new TimelineLite();
-
-			this.setPosition = function(x, y) {
-				this.position.x = x;
-				this.position.y = y;
-
-				this.sprite.position.x = x * Map.tileWidth * Map.tileScale.x;
-				this.sprite.position.y = y * Map.tileHeight * Map.tileScale.y;
-				return this;
-			}
-			this.walk = function(direction) {
-				var toPosition = this.position.clone();
-
-				switch(direction){
-					case DIRECTIONS.UP:
-						toPosition.y--;
-						break;
-					case DIRECTIONS.RIGHT:
-						toPosition.x++;
-						break;
-					case DIRECTIONS.DOWN:
-						toPosition.y++;
-						break;
-					case DIRECTIONS.LEFT:
-						toPosition.x--;
-						break;
-				}
-
-				timeline.to(this.sprite.position, this.walkSpeed, {
-					x: toPosition.x * Map.tileWidth * Map.tileScale.x,
-					y: toPosition.y * Map.tileHeight * Map.tileScale.y,
-					ease: Linear.easeNone
-				});
-				this.position = toPosition;
-				return this;
-			}
-		}
-
-		// TILE
-		function Tile() {
-			this.texture = undefined;
-			this.properties = undefined;
-
-			this.collides = function() {
-				if(this.properties != undefined && this.properties['collides'] == '1') {
-					return true;
-				}
-				return false;
-			}
-		}
-
-		// MAP
-		function Map() { }
-		Map.tilesets = undefined;
-		Map.tiles = undefined;
-		Map.tileWidth = undefined;
-		Map.tileHeight = undefined;
-		Map.tileScale = new PIXI.Point(2, 2);
-		Map.collision = undefined;
-
-		Map.load = function(url, onComplete) {
-			Game.mapContainer = new PIXI.DisplayObjectContainer();
-			Game.mapContainer.alpha = 0;
-			Game.viewport.addChild(Game.mapContainer);
-
-			console.log('Loading map \'' + url + '\'...');
-			$.getJSON(url, function(map) {
-				// Tilesets loading
-				Map.tilesets = new Object();
-				Map.tiles = new Object();
-				Map.tileWidth = map.tilewidth;
-				Map.tileHeight = map.tileheight;
-				Map.collision = new Object();
-
-				console.log(map);
-
-				$.each(map.tilesets, function(i, tileset) {
-					console.log('\'' + tileset.name + '\' loaded.')
-					Map.tilesets[tileset.name] = new PIXI.BaseTexture.fromImage(tileset.image);
-					
-					var img_width = tileset.imagewidth + (tileset.margin * 2);
-					var img_height = tileset.imageheight + (tileset.margin * 2);
-					var tile_width = tileset.tilewidth + (tileset.spacing * 2);
-					var tile_height = tileset.tileheight + (tileset.spacing * 2);
-					var width = img_width / tile_width;
-					var height = img_height / tile_height;
-					var count = width * height;
-
-					var x = 0, y = 0;
-					var gid = tileset.firstgid;
-					for (var i = 0; i < count; i++) {
-						// Instantiate tiles
-						var tile = new Tile();
-						tile.texture = new PIXI.Texture(Map.tilesets[tileset.name], new PIXI.Rectangle(tileset.margin + (x * tileset.tilewidth), tileset.margin + (y * tileset.tileheight), tileset.tilewidth, tileset.tileheight));
-						tile.properties = tileset.tileproperties[gid-1];
-						Map.tiles[gid] = tile;
-						
-						x++;
-						if((i+1) % width == 0) {
-							x = 0;
-							y++;
-						}
-						gid++;
-					};
-				});
-
-				// Drawing
-				$.each(map.layers, function(i, layer) {
-					console.log('Drawing \'' + layer.name + '\'...')
-					if(layer.visible == true) {
-						switch(layer.type) {
-							case 'tilelayer':
-								var x = layer.x * Map.tileWidth * Map.tileScale.x, y = layer.y * Map.tileHeight * Map.tileScale.y;
-								$.each(layer.data, function(i, tileID) {
-
-									var tile = Map.tiles[tileID];
-
-									if(tile != undefined) {
-										var sprite = new PIXI.Sprite(tile.texture);
-										sprite.scale = Map.tileScale;
-										sprite.position = new PIXI.Point(x * Map.tileWidth * Map.tileScale.x, y * Map.tileHeight * Map.tileScale.y);
-										Game.mapContainer.addChild(sprite);
-
-										if(i in Map.collision) {
-											if(Map.collision[i] == 0) {
-												Map.collision[i] = ((tile.collides()) ? 1 : 0);
-											}
-										} else {
-											Map.collision[i] = ((tile.collides()) ? 1 : 0);
-										}
-
-										// Highlight collision tiles
-										if(Map.collision[i] == 1) { sprite.tint = 0xFF0000; }
-									}
-
-									x++;
-									if((i+1) % layer.width == 0) {
-										y++;
-										x = 0;
-									}
-								});
-							break;
-						}
-					}
-				});
-				console.log("Finished.");
-			}).done(onComplete);
-		};
-
-		Map.clear = function() {
-			if(Game.mapContainer != undefined) {
-				Game.stage.removeChild(Game.mapContainer);
-				Game.mapContainer = undefined;
-				console.log("Map cleaned.");
-			}
-		};
 
 		var player;
 
