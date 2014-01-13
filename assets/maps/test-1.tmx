@@ -18,6 +18,11 @@
   <tile id="96" terrain=",0,,"/>
   <tile id="97" terrain="0,0,,"/>
   <tile id="98" terrain="0,,,"/>
+  <tile id="320">
+   <properties>
+    <property name="collides" value="1"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Camada de Tiles 1" width="50" height="50">
   <data>

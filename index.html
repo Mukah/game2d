@@ -175,7 +175,7 @@
 			this.properties = undefined;
 
 			this.collides = function() {
-				if(this.properties != undefined && this.properties['collides'] == 'true') {
+				if(this.properties != undefined && this.properties['collides'] == '1') {
 					return true;
 				}
 				return false;
@@ -189,6 +189,7 @@
 		Map.tileWidth = undefined;
 		Map.tileHeight = undefined;
 		Map.tileScale = new PIXI.Point(2, 2);
+		Map.collision = undefined;
 
 		Map.load = function(url, onComplete) {
 			Game.mapContainer = new PIXI.DisplayObjectContainer();
@@ -202,6 +203,9 @@
 				Map.tiles = new Object();
 				Map.tileWidth = map.tilewidth;
 				Map.tileHeight = map.tileheight;
+				Map.collision = new Object();
+
+				console.log(map);
 
 				$.each(map.tilesets, function(i, tileset) {
 					console.log('\'' + tileset.name + '\' loaded.')
@@ -223,7 +227,7 @@
 						tile.texture = new PIXI.Texture(Map.tilesets[tileset.name], new PIXI.Rectangle(tileset.margin + (x * tileset.tilewidth), tileset.margin + (y * tileset.tileheight), tileset.tilewidth, tileset.tileheight));
 						tile.properties = tileset.tileproperties[gid];
 						Map.tiles[gid] = tile;
-
+						
 						x++;
 						if((i+1) % width == 0) {
 							x = 0;
@@ -240,12 +244,26 @@
 						switch(layer.type) {
 							case 'tilelayer':
 								var x = layer.x * Map.tileWidth * Map.tileScale.x, y = layer.y * Map.tileHeight * Map.tileScale.y;
-								$.each(layer.data, function(i, tile) {
-									if(tile != 0) {
-										var tile = new PIXI.Sprite(Map.tiles[tile].texture);
-										tile.scale = Map.tileScale;
-										tile.position = new PIXI.Point(x * Map.tileWidth * Map.tileScale.x, y * Map.tileHeight * Map.tileScale.y);
-										Game.mapContainer.addChild(tile);
+								$.each(layer.data, function(i, tileID) {
+
+									var tile = Map.tiles[tileID];
+
+									if(tile != undefined) {
+										var sprite = new PIXI.Sprite(tile.texture);
+										sprite.scale = Map.tileScale;
+										sprite.position = new PIXI.Point(x * Map.tileWidth * Map.tileScale.x, y * Map.tileHeight * Map.tileScale.y);
+										Game.mapContainer.addChild(sprite);
+
+										if(i in Map.collision) {
+											if(Map.collision[i] == 0) {
+												Map.collision[i] = ((tile.collides()) ? 1 : 0);
+											}
+										} else {
+											Map.collision[i] = ((tile.collides()) ? 1 : 0);
+										}
+
+										// Highlight collision tiles
+										if(Map.collision[i] == 1) { sprite.tint = 0xFF0000; }
 									}
 
 									x++;

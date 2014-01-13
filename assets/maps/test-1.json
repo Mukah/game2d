@@ -49,6 +49,10 @@
          "tileheight":16,
          "tileproperties":
             {
+             "10":
+                {
+                 "collides":"1"
+                },
              "67":
                 {
                  "teste":"aeaeae"
