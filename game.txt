@@ -17,3 +17,8 @@ Website: http://www.greensock.com/gsap-js
 Git: https://github.com/greensock/GreenSock-JS
 Doc: http://api.greensock.com/js
 Guides: http://www.greensock.com/get-started-js
+
+# Pathfinding
+
+Example: http://qiao.github.io/PathFinding.js/visual/
+Git: https://github.com/qiao/PathFinding.js
