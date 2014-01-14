@@ -76,6 +76,6 @@ function Creature(name, texture) {
 		Map.collision = collisionBackup;
 	}
 	this.stop = function() {
-		
+
 	}
 }
