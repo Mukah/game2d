@@ -49,7 +49,7 @@
 
 		Game.initialize();
 
-		var test = new PIXI.Text("Player", {font:"11px arial", fill:"#FFFFFF", stroke:"#000000", strokeThickness: 1});
+		var label = new PIXI.Text("Player", {font:"11px arial", fill:"#FFFFFF", stroke:"#000000", strokeThickness: 1});
 
 		Map.load('assets/maps/test-1.json', function() {
 			console.log('Done.');
@@ -60,17 +60,15 @@
 				onComplete: callback
 			});
 
-			
-
 			player = new Player("Mukah", Map.tiles[1].texture);
 			player.setPosition(3, 3);
 			player.onMove = function() {
-				test.position = player.sprite.position;
+				label.position = player.sprite.position;
 				camera1.centerAt(player.sprite.position).focus();
 			}
 			Game.viewport.addChild(player.sprite);
-			test.setText(player.name);
-			Game.viewport.addChild(test);
+			label.setText(player.name);
+			Game.viewport.addChild(label);
 
 			function callback() {
 				console.log("Animation finished.");
