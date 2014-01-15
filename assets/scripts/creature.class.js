@@ -8,7 +8,7 @@ function Creature(name, texture) {
 	this.position = new PIXI.Point(0, 0);
 	this.healthNow = 0;
 	this.healthMax = 0;
-	this.walkSpeed = 1;
+	this.walkSpeed = 0.1;
 	this.status = STATUS.IDLE;
 
 	this.sprite = new PIXI.Sprite(texture);
@@ -33,19 +33,20 @@ function Creature(name, texture) {
 		return this;
 	}
 	this.moveTo = function(toPosition, callback) {
+		callback = callback || function() { };
+
 		if(this.status == STATUS.IDLE) {
 			this.status = STATUS.WALKING;
 			if(PIXI.Point.distance(this.position, toPosition) <= 1) {
 				//if(Map.collision[toPosition.y][toPosition.x] == 0) {
-					//timeline.resume();
 					TweenLite.to(this.sprite.position, this.walkSpeed, {
 						x: toPosition.x * Map.tileWidth * Map.tileScale.x,
 						y: toPosition.y * Map.tileHeight * Map.tileScale.y,
 						ease: Linear.easeNone,
 						onCompleteScope: this,
 						onComplete: function() {
-							this.position = toPosition;
 							this.status = STATUS.IDLE;
+							this.position = toPosition;
 							callback();
 						}
 					});
@@ -55,6 +56,8 @@ function Creature(name, texture) {
 		return this;
 	}
 	this.move = function(direction, callback) {
+		callback = callback || function() { };
+
 		if(this.status == STATUS.IDLE) {
 			var toPosition = this.position.clone();
 
@@ -69,7 +72,9 @@ function Creature(name, texture) {
 		}
 		return this;
 	}
-	this.walkTo = function(toPosition, callback) {
+	this.walkTowards = function(toPosition, callback) {
+		callback = callback || function() { };
+
 		if(this.status == STATUS.IDLE) {
 			var collisionBackup = Map.collision.clone();
 			var finder = new PF.AStarFinder({
@@ -77,21 +82,22 @@ function Creature(name, texture) {
 				allowDiagonal: false
 			});
 			var path = finder.findPath(this.position.x, this.position.y, toPosition.x, toPosition.y, Map.collision);
-			this.walkPath(path, callback);
+			if(path.length > 1) {
+				this.moveTo(new PIXI.Point(path[1][0], path[1][1]), callback);
+			}
 			Map.collision = collisionBackup;
 		}
+		return this;
 	}
-	this.walkPath = function(array, callback, i) {
+	this.walkTo = function(toPosition, callback) {
+		callback = callback || function() { };
+
 		if(this.status == STATUS.IDLE) {
-			var self = this;
-			i = i | 0;
-			if(i < array.length) {
-				this.moveTo(((array[i] instanceof PIXI.Point) ? array[i] : new PIXI.Point(array[i][0], array[i][1])), function() {
-					self.walkPath(array, callback, ++i);
+			if(PIXI.Point.distance(this.position, toPosition) > 0) {
+				var self = this;
+				this.walkTowards(toPosition, function() {
+					self.walkTo(toPosition, callback);
 				});
-			} else {
-				this.status = STATUS.IDLE;
-				callback();
 			}
 		}
 	}
