@@ -8,14 +8,11 @@ Map.tileScale = new PIXI.Point(2, 2);
 Map.collision = undefined;
 
 Map.load = function(url, onComplete) {
-	Game.mapContainer = new PIXI.DisplayObjectContainer();
 	Game.mapContainer.alpha = 0;
 	Game.viewport.addChild(Game.mapContainer);
 
 	console.log('Loading map \'' + url + '\'...');
 	$.getJSON(url, function(map) {
-		console.log(map);
-
 		// Tilesets loading
 		Map.tilesets = new Object();
 		Map.tiles = new Object();

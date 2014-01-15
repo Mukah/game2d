@@ -5,7 +5,7 @@ Game.renderer = undefined;
 Game.stageWidth = 900;
 Game.stageHeight = 600;
 Game.viewport = new PIXI.DisplayObjectContainer();
-Game.mapContainer = undefined;
+Game.mapContainer = new PIXI.DisplayObjectContainer();
 Game.GUIContainer = new PIXI.DisplayObjectContainer();
 
 Game.initialize = function() {
@@ -20,6 +20,9 @@ Game.initialize = function() {
 
 	// Add viewport to stage
 	Game.stage.addChild(Game.viewport);
+
+	// Add map container to stage
+	Game.viewport.addChild(Game.mapContainer);
 
 	// Add GUI container to stage
 	Game.stage.addChild(Game.GUIContainer);

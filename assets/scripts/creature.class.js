@@ -8,21 +8,12 @@ function Creature(name, texture) {
 	this.position = new PIXI.Point(0, 0);
 	this.healthNow = 0;
 	this.healthMax = 0;
-	this.walkSpeed = 0.1;
+	this.walkSpeed = 0.2;
 	this.status = STATUS.IDLE;
 
 	this.sprite = new PIXI.Sprite(texture);
 	this.sprite.scale = Map.tileScale;
 	this.sprite.alpha = 1;
-
-	var timeline = new TimelineLite({
-		//paused: true,
-		onComplete: function() {
-			//this.pause();
-			//console.log("pause");
-		}
-	});
-	//timeline.from(this.sprite, 0, { alpha: 0});
 
 	this.setPosition = function(x, y) {
 		this.position.x = x;
@@ -35,14 +26,18 @@ function Creature(name, texture) {
 	this.moveTo = function(toPosition, callback) {
 		callback = callback || function() { };
 
+		console.log("anda");
+
 		if(this.status == STATUS.IDLE) {
-			this.status = STATUS.WALKING;
 			if(PIXI.Point.distance(this.position, toPosition) <= 1) {
-				//if(Map.collision[toPosition.y][toPosition.x] == 0) {
+				if(Map.collision.isWalkableAt(toPosition.x, toPosition.y)) {
+					this.status = STATUS.WALKING;
 					TweenLite.to(this.sprite.position, this.walkSpeed, {
 						x: toPosition.x * Map.tileWidth * Map.tileScale.x,
 						y: toPosition.y * Map.tileHeight * Map.tileScale.y,
 						ease: Linear.easeNone,
+						onUpdateScope: this,
+						onUpdate: this.onMove,
 						onCompleteScope: this,
 						onComplete: function() {
 							this.status = STATUS.IDLE;
@@ -50,7 +45,7 @@ function Creature(name, texture) {
 							callback();
 						}
 					});
-				//}
+				}
 			}
 		}
 		return this;
@@ -104,7 +99,5 @@ function Creature(name, texture) {
 			}
 		}
 	}
-	this.stop = function() {
-		
-	}
+	this.onMove = function() { }
 }
