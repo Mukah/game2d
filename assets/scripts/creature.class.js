@@ -89,15 +89,18 @@ function Creature(name, texture) {
 		}
 		return this;
 	}
+	// Essa função está calculando o pathfinder a cada passo.
 	this.walkTo = function(toPosition, callback) {
 		callback = callback || function() { };
 
 		if(this.status == STATUS.IDLE) {
 			if(PIXI.Point.distance(this.position, toPosition) > 0) {
 				var self = this;
-				this.walkTowards(toPosition, function() {
-					self.walkTo(toPosition, callback);
-				});
+				setTimeout(function() {
+					self.walkTowards(toPosition, function() {
+						self.walkTo(toPosition, callback);
+					});
+				}, 0)
 			}
 		}
 	}

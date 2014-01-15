@@ -23,6 +23,8 @@
 
 	<script type="text/javascript" src="assets/scripts/pathfinding/pathfinding-browser.min.js"></script>
 
+	<script type="text/javascript" src="assets/scripts/input.class.js"></script>
+
 	<script type="text/javascript" src="assets/scripts/directions.enum.js"></script>
 	<script type="text/javascript" src="assets/scripts/point.class.js"></script>
 
@@ -74,6 +76,20 @@
 
 		Game.onUpdate = function() {
 			//console.log('frame');
+			if(Input.isDown(Input.KEY_DOWN)) {
+				if(player.status == STATUS.IDLE)
+					player.move(DIRECTIONS.DOWN);
+			} else if(Input.isDown(Input.KEY_UP)) {
+				if(player.status == STATUS.IDLE)
+					player.move(DIRECTIONS.UP);
+			} else if(Input.isDown(Input.KEY_LEFT)) {
+				if(player.status == STATUS.IDLE)
+					player.move(DIRECTIONS.LEFT);
+			} else if(Input.isDown(Input.KEY_RIGHT)) {
+				if(player.status == STATUS.IDLE)
+					player.move(DIRECTIONS.RIGHT);
+			}
+
 		};
 	</script>
 	</body>
