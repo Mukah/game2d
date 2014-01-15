@@ -8,5 +8,7 @@ function Tile() {
 			return true;
 		}
 		return false;
-	}
+	};
+
+	this.onClick = function() { };
 }

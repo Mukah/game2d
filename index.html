@@ -29,6 +29,7 @@
 	<script type="text/javascript" src="assets/scripts/point.class.js"></script>
 
 	<script type="text/javascript" src="assets/scripts/game.class.js"></script>
+	<script type="text/javascript" src="assets/scripts/action.class.js"></script>
 	<script type="text/javascript" src="assets/scripts/map.class.js"></script>
 	<script type="text/javascript" src="assets/scripts/camera.class.js"></script>
 	<script type="text/javascript" src="assets/scripts/tile.class.js"></script>
@@ -83,19 +84,18 @@
 		camera2.centerAt(new PIXI.Point(1600, 1600));
 
 		Game.onUpdate = function() {
-			//console.log('frame');
-			if(player.status == STATUS.IDLE) {
-				if(Input.isDown(Input.KEY_DOWN)) {
-					player.move(DIRECTIONS.DOWN);
-				} else if(Input.isDown(Input.KEY_UP)) {
-					player.move(DIRECTIONS.UP);
-				} else if(Input.isDown(Input.KEY_LEFT)) {
-					player.move(DIRECTIONS.LEFT);
-				} else if(Input.isDown(Input.KEY_RIGHT)) {
-					player.move(DIRECTIONS.RIGHT);
-				}
-			}
-
+			// O update é executado antes do player ser instanciado.
+			//if(player.status == STATUS.IDLE) {
+			//	if(Input.isDown(Input.KEY_DOWN)) {
+			//		player.move(DIRECTIONS.DOWN);
+			//	} else if(Input.isDown(Input.KEY_UP)) {
+			//		player.move(DIRECTIONS.UP);
+			//	} else if(Input.isDown(Input.KEY_LEFT)) {
+			//		player.move(DIRECTIONS.LEFT);
+			//	} else if(Input.isDown(Input.KEY_RIGHT)) {
+			//		player.move(DIRECTIONS.RIGHT);
+			//	}
+			//}
 		};
 	</script>
 	</body>

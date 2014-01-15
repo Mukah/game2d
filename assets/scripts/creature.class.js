@@ -1,4 +1,4 @@
-function STATUS() {}
+function STATUS() { }
 STATUS.IDLE = 0;
 STATUS.WALKING = 1;
 
@@ -22,11 +22,9 @@ function Creature(name, texture) {
 		this.sprite.position.x = x * Map.tileWidth * Map.tileScale.x;
 		this.sprite.position.y = y * Map.tileHeight * Map.tileScale.y;
 		return this;
-	}
+	};
 	this.moveTo = function(toPosition, callback) {
 		callback = callback || function() { };
-
-		console.log("anda");
 
 		if(this.status == STATUS.IDLE) {
 			if(PIXI.Point.distance(this.position, toPosition) <= 1) {
@@ -49,7 +47,7 @@ function Creature(name, texture) {
 			}
 		}
 		return this;
-	}
+	};
 	this.move = function(direction, callback) {
 		callback = callback || function() { };
 
@@ -66,7 +64,8 @@ function Creature(name, texture) {
 			this.moveTo(toPosition, callback);
 		}
 		return this;
-	}
+	};
+	// Checar se o toPosition é valido
 	this.walkTowards = function(toPosition, callback) {
 		callback = callback || function() { };
 
@@ -83,8 +82,9 @@ function Creature(name, texture) {
 			Map.collision = collisionBackup;
 		}
 		return this;
-	}
+	};
 	// Essa função está calculando o pathfinder a cada passo.
+	// Checar se o toPosition é valido
 	this.walkTo = function(toPosition, callback) {
 		callback = callback || function() { };
 
@@ -98,6 +98,6 @@ function Creature(name, texture) {
 				}, 0)
 			}
 		}
-	}
-	this.onMove = function() { }
+	};
+	this.onMove = function() { };
 }
