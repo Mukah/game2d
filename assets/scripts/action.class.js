@@ -18,6 +18,4 @@ Action["1"] = function(event) {
 			alert("Right click");
 			break;
 	}
-	
-	
 }
