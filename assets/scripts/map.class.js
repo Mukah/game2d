@@ -80,7 +80,7 @@ Map.load = function(url, onComplete) {
 								if(tile.onClick != undefined) {
 									sprite.interactive = true;
 									sprite.buttonMode = true;
-									sprite.defaultCursor = "url(http://www.javascriptkit.com/dhtmltutors/cursor-hand.gif), auto";
+									sprite.defaultCursor = CURSORS.CUSTOM;
 									sprite.click = tile.onClick;
 								}
 
