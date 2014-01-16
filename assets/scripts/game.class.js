@@ -11,6 +11,14 @@ Game.GUIContainer = new PIXI.DisplayObjectContainer();
 Game.initialize = function() {
 	Game.stage = new PIXI.Stage(0x5996FF);
 	Game.renderer = PIXI.autoDetectRenderer(Game.stageWidth, Game.stageHeight);
+
+	// Disable context menu on right click
+	Game.renderer.view.oncontextmenu = function(e) {
+		e.preventDefault();
+		return false;
+	}
+
+	// Add view to document body
 	document.body.appendChild(Game.renderer.view);
 
 	// Some settings

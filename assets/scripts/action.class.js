@@ -1,7 +1,8 @@
 // ACTION
 function Action() { }
-Action["10"] = function() {
-	console.log("aeae!");
-}
 
-Action["10"]();
+// When click on a rock
+Action["1"] = function(event) {
+	console.log(event);
+	alert("you see a rock and I wanna rock, rock!");
+}

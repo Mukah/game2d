@@ -41,7 +41,7 @@ Map.load = function(url, onComplete) {
 
 				// Click event
 				if('onClick' in tile.properties) {
-					//tile.action = 
+					tile.onClick = Action[tile.properties['onClick']];
 				}
 
 				Map.tiles[gid] = tile;
@@ -75,6 +75,15 @@ Map.load = function(url, onComplete) {
 								var sprite = new PIXI.Sprite(tile.texture);
 								sprite.scale = Map.tileScale;
 								sprite.position = new PIXI.Point(x * Map.tileWidth * Map.tileScale.x, y * Map.tileHeight * Map.tileScale.y);
+
+								// Click event
+								if(tile.onClick != undefined) {
+									sprite.interactive = true;
+									sprite.buttonMode = true;
+									sprite.defaultCursor = "url(http://www.javascriptkit.com/dhtmltutors/cursor-hand.gif), auto";
+									sprite.click = tile.onClick;
+								}
+
 								Game.mapContainer.addChild(sprite);
 
 								if(collision_map[y][x] != 1) {

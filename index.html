@@ -85,17 +85,17 @@
 
 		Game.onUpdate = function() {
 			// O update é executado antes do player ser instanciado.
-			//if(player.status == STATUS.IDLE) {
-			//	if(Input.isDown(Input.KEY_DOWN)) {
-			//		player.move(DIRECTIONS.DOWN);
-			//	} else if(Input.isDown(Input.KEY_UP)) {
-			//		player.move(DIRECTIONS.UP);
-			//	} else if(Input.isDown(Input.KEY_LEFT)) {
-			//		player.move(DIRECTIONS.LEFT);
-			//	} else if(Input.isDown(Input.KEY_RIGHT)) {
-			//		player.move(DIRECTIONS.RIGHT);
-			//	}
-			//}
+			if(player.status == STATUS.IDLE) {
+				if(Input.isDown(Input.KEY_DOWN)) {
+					player.move(DIRECTIONS.DOWN);
+				} else if(Input.isDown(Input.KEY_UP)) {
+					player.move(DIRECTIONS.UP);
+				} else if(Input.isDown(Input.KEY_LEFT)) {
+					player.move(DIRECTIONS.LEFT);
+				} else if(Input.isDown(Input.KEY_RIGHT)) {
+					player.move(DIRECTIONS.RIGHT);
+				}
+			}
 		};
 	</script>
 	</body>

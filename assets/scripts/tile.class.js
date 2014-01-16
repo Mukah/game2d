@@ -10,5 +10,5 @@ function Tile() {
 		return false;
 	};
 
-	this.onClick = function() { };
+	this.onClick = undefined;
 }
