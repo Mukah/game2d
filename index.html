@@ -68,16 +68,19 @@
 			player = new Player("Mukah", Map.tiles[1].texture);
 			player.setPosition(3, 3);
 			player.onMove = function() {
-				label.position = player.sprite.position;
-				camera1.centerAt(player.sprite.position).focus();
+				label.position = player.view.position;
+				camera1.centerAt(player.view.position).focus();
 			}
-			Game.viewport.addChild(player.sprite);
+			Game.viewport.addChild(player.view);
 			label.setText(player.name);
 			Game.viewport.addChild(label);
 
 			var bt = new GUIButton({
 				default: Map.tiles[5].texture,
-				click: Map.tiles[10].texture
+				over: Map.tiles[10].texture
+			});
+			bt.click(function() {
+				player.walkTo(new PIXI.Point(49,49));
 			});
 			bt.view.position = new PIXI.Point(100, 100);
 			Game.stage.addChild(bt.view);

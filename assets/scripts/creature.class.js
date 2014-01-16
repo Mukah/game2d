@@ -11,16 +11,16 @@ function Creature(name, texture) {
 	this.walkSpeed = 0.2;
 	this.status = STATUS.IDLE;
 
-	this.sprite = new PIXI.Sprite(texture);
-	this.sprite.scale = Map.tileScale;
-	this.sprite.alpha = 1;
+	this.view = new PIXI.Sprite(texture);
+	this.view.scale = Map.tileScale;
+	this.view.alpha = 1;
 
 	this.setPosition = function(x, y) {
 		this.position.x = x;
 		this.position.y = y;
 
-		this.sprite.position.x = x * Map.tileWidth * Map.tileScale.x;
-		this.sprite.position.y = y * Map.tileHeight * Map.tileScale.y;
+		this.view.position.x = x * Map.tileWidth * Map.tileScale.x;
+		this.view.position.y = y * Map.tileHeight * Map.tileScale.y;
 		return this;
 	};
 	this.moveTo = function(toPosition, callback) {
@@ -30,7 +30,7 @@ function Creature(name, texture) {
 			if(PIXI.Point.distance(this.position, toPosition) <= 1) {
 				if(Map.collision.isWalkableAt(toPosition.x, toPosition.y)) {
 					this.status = STATUS.WALKING;
-					TweenLite.to(this.sprite.position, this.walkSpeed, {
+					TweenLite.to(this.view.position, this.walkSpeed, {
 						x: toPosition.x * Map.tileWidth * Map.tileScale.x,
 						y: toPosition.y * Map.tileHeight * Map.tileScale.y,
 						ease: Linear.easeNone,
