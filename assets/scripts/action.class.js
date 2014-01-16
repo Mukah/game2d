@@ -4,5 +4,20 @@ function Action() { }
 // When click on a rock
 Action["1"] = function(event) {
 	console.log(event);
-	alert("you see a rock and I wanna rock, rock!");
+	switch(event.originalEvent.button) {
+		// Left button
+		case 0:
+			alert("Left click");
+			break;
+		// Scroll button
+		case 1:
+			alert("Scroll click");
+			break;
+		// Right button
+		case 2:
+			alert("Right click");
+			break;
+	}
+	
+	
 }
