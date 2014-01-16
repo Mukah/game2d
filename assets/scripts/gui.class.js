@@ -1,4 +1,10 @@
-function GUIButton(texture) {
-	PIXI.Sprite.apply(this, arguments);
+function GUIButton(options) {
+	this.view = new PIXI.Sprite(options['default']);
+	this.view.interactive = true;
+
+	// Events
+	var self = this;
+	this.view.mouse = function() {
+		self.view.setTexture(options['hover']);
+	}
 }
-new GUIButton(PIXI.Texture.fromImage("assets/grass.png"));

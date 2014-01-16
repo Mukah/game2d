@@ -75,6 +75,13 @@
 			label.setText(player.name);
 			Game.viewport.addChild(label);
 
+			var bt = new GUIButton({
+				default: Map.tiles[5].texture,
+				click: Map.tiles[10].texture
+			});
+			bt.view.position = new PIXI.Point(100, 100);
+			Game.stage.addChild(bt.view);
+
 			function callback() {
 				console.log("Animation finished.");
 				//camera2.smoothFocus();
@@ -86,6 +93,8 @@
 
 		var camera2 = new Camera();
 		camera2.centerAt(new PIXI.Point(1600, 1600));
+
+		
 
 		Game.onUpdate = function() {
 			// O update é executado antes do player ser instanciado.
