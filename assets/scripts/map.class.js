@@ -91,7 +91,7 @@ Map.load = function(url, onComplete) {
 								}
 
 								// Highlight collision tiles
-								if(collision_map[y][x] == 1) { sprite.tint = 0xFF0000; }
+								//if(collision_map[y][x] == 1) { sprite.tint = 0xFF0000; }
 							}
 
 							x++;
