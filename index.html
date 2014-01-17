@@ -53,22 +53,21 @@
 
 		Game.initialize();
 
-		var label = new PIXI.Text("null", { font: "14px Arial", fill: "#FFFFFF" });
+		var label = new PIXI.Text('null', { font: '14px Arial', fill: '#FFFFFF' });
 		label.anchor = new PIXI.Point(0.5, 2.5);
 
 		Map.load('assets/maps/test-1.json', function() {
 			// Instantiate player
-			var player = new Player("mukahwagner", Map.tiles[1].texture);
-			player.setPosition(3, 3);
+			var player = new Player('mukahwagner', PIXI.Texture.fromImage('assets/'));
 			player.onMove = function() {
 				label.position = player.view.position;
 				camera1.centerAt(player.view.position).focus();
-			}
+			};
+
+			player.setPosition(3, 3);
+			
 			Game.protagonist = player;
 			Game.viewport.addChild(player.view);
-
-			label.position = player.view.position;
-			camera1.centerAt(player.view.position).focus();
 
 			// Player name label
 			label.setText(player.name);
@@ -93,7 +92,7 @@
 			});
 
 			function callback() {
-				console.log("Animation finished.");
+				console.log('Animation finished.');
 			}
 		});
 

@@ -107,7 +107,7 @@ Map.load = function(url, onComplete) {
 
 		Map.collision = new PF.Grid(map.width, map.height, collision_map);
 
-		console.log("Finished.");
+		console.log('Finished.');
 	}).done(onComplete);
 };
 
@@ -115,6 +115,6 @@ Map.clear = function() {
 	if(Game.mapContainer != undefined) {
 		Game.stage.removeChild(Game.mapContainer);
 		Game.mapContainer = undefined;
-		console.log("Map cleaned.");
+		console.log('Map cleaned.');
 	}
 };

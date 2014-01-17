@@ -4,6 +4,7 @@ STATUS.WALKING = 1;
 
 // CREATURES
 function Creature(name, texture) {
+	// Attributes
 	this.name = name;
 	this.position = new PIXI.Point(0, 0);
 	this.healthNow = 0;
@@ -16,12 +17,18 @@ function Creature(name, texture) {
 	this.view.alpha = 1;
 	this.view.pivot = new PIXI.Point(8, 8);
 
+	// Events
+	this.onMove = function() { };
+
+	// Functions
 	this.setPosition = function(x, y) {
 		this.position.x = x;
 		this.position.y = y;
 
 		this.view.position.x = (x * Map.tileWidth + this.view.pivot.x) * Map.tileScale.x;
 		this.view.position.y = (y * Map.tileHeight + this.view.pivot.y) * Map.tileScale.y;
+
+		this.onMove();
 		return this;
 	};
 	this.moveTo = function(toPosition, callback) {
@@ -96,9 +103,8 @@ function Creature(name, texture) {
 					self.walkTowards(toPosition, function() {
 						self.walkTo(toPosition, callback);
 					});
-				}, 0)
+				}, 0);
 			}
 		}
 	};
-	this.onMove = function() { };
 }

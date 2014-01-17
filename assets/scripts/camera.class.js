@@ -1,7 +1,9 @@
 // CAMERA
 function Camera() {
+	// Attributes
 	this.position = new PIXI.Point(0, 0);
 
+	// Functions
 	this.centerAt = function(point) {
 		this.position.x = (Game.stageWidth / 2) - point.x;
 		this.position.y = (Game.stageHeight / 2) - point.y;
