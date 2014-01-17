@@ -58,7 +58,7 @@
 
 		Map.load('assets/maps/test-1.json', function() {
 			// Instantiate player
-			var player = new Player('mukahwagner', PIXI.Texture.fromImage('assets/'));
+			var player = new Player('mukahwagner', PIXI.Texture.fromImage('assets/creatures/player.png'));
 			player.onMove = function() {
 				label.position = player.view.position;
 				camera1.centerAt(player.view.position).focus();
