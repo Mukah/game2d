@@ -8,6 +8,8 @@ Game.viewport = new PIXI.DisplayObjectContainer();
 Game.mapContainer = new PIXI.DisplayObjectContainer();
 Game.GUIContainer = new PIXI.DisplayObjectContainer();
 
+Game.protagonist = undefined;
+
 Game.initialize = function() {
 	Game.stage = new PIXI.Stage(0x5996FF);
 	Game.renderer = PIXI.autoDetectRenderer(Game.stageWidth, Game.stageHeight);

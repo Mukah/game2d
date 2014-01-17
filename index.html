@@ -8,6 +8,7 @@
 			background-color: #000000;
 		}
 	</style>
+	<link href='http://fonts.googleapis.com/css?family=Freckle+Face' rel='stylesheet' type='text/css'>
 	<script type="text/javascript" src="assets/scripts/pixi/pixi.js"></script>
 
 	<script type="text/javascript" src="assets/scripts/jquery/jquery-1.10.2.min.js"></script>
@@ -50,44 +51,46 @@
 		stats.domElement.style.top = '0px';
 		document.body.appendChild(stats.domElement);
 
-		var player;
-
 		Game.initialize();
 
-		var label = new PIXI.Text("Player", {font:"11px arial", fill:"#FFFFFF", stroke:"#000000", strokeThickness: 1});
+		var label = new PIXI.Text("null", { font: "14px Arial", fill: "#FFFFFF" });
+		label.anchor = new PIXI.Point(0.5, 2.5);
 
 		Map.load('assets/maps/test-1.json', function() {
-			console.log('Done.');
+			// Instantiate player
+			var player = new Player("mukahwagner", Map.tiles[1].texture);
+			player.setPosition(3, 3);
+			player.onMove = function() {
+				label.position = player.view.position;
+				camera1.centerAt(player.view.position).focus();
+			}
+			Game.protagonist = player;
+			Game.viewport.addChild(player.view);
 
+			// Player name label
+			label.setText(player.name);
+			Game.viewport.addChild(label);			
+
+			// Testing GUI button
+			var bt = new GUIButton({
+				default: Map.tiles[5].texture,
+				over: Map.tiles[10].texture
+			});
+			bt.setPosition(new PIXI.Point(100, 100));
+			bt.click(function() {
+				Game.protagonist.walkTo(new PIXI.Point(49,49));
+			});
+			Game.stage.addChild(bt.view);
+
+			// Map alpha tween
 			TweenLite.to(Game.mapContainer, 1, {
 				alpha: 1,
 				ease: Linear.easeNone,
 				onComplete: callback
 			});
 
-			player = new Player("Mukah", Map.tiles[1].texture);
-			player.setPosition(3, 3);
-			player.onMove = function() {
-				label.position = player.view.position;
-				camera1.centerAt(player.view.position).focus();
-			}
-			Game.viewport.addChild(player.view);
-			label.setText(player.name);
-			Game.viewport.addChild(label);
-
-			var bt = new GUIButton({
-				default: Map.tiles[5].texture,
-				over: Map.tiles[10].texture
-			});
-			bt.click(function() {
-				player.walkTo(new PIXI.Point(49,49));
-			});
-			bt.view.position = new PIXI.Point(100, 100);
-			Game.stage.addChild(bt.view);
-
 			function callback() {
 				console.log("Animation finished.");
-				//camera2.smoothFocus();
 			}
 		});
 
@@ -97,19 +100,17 @@
 		var camera2 = new Camera();
 		camera2.centerAt(new PIXI.Point(1600, 1600));
 
-		
-
 		Game.onUpdate = function() {
 			// O update é executado antes do player ser instanciado.
-			if(player.status == STATUS.IDLE) {
+			if(Game.protagonist.status == STATUS.IDLE) {
 				if(Input.isDown(Input.KEY_DOWN)) {
-					player.move(DIRECTIONS.DOWN);
+					Game.protagonist.move(DIRECTIONS.DOWN);
 				} else if(Input.isDown(Input.KEY_UP)) {
-					player.move(DIRECTIONS.UP);
+					Game.protagonist.move(DIRECTIONS.UP);
 				} else if(Input.isDown(Input.KEY_LEFT)) {
-					player.move(DIRECTIONS.LEFT);
+					Game.protagonist.move(DIRECTIONS.LEFT);
 				} else if(Input.isDown(Input.KEY_RIGHT)) {
-					player.move(DIRECTIONS.RIGHT);
+					Game.protagonist.move(DIRECTIONS.RIGHT);
 				}
 			}
 		};

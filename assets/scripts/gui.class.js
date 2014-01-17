@@ -8,6 +8,9 @@ function GUIButton(options) {
 		options['onClick'] = click;
 		this.view.click = options['onClick'];
 	};
+	this.setPosition = function(position) {
+		this.view.position = position;
+	}
 	// Events
 	var self = this;
 	this.view.mouseover = function() {

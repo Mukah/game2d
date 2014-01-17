@@ -14,6 +14,7 @@ function Creature(name, texture) {
 	this.view = new PIXI.Sprite(texture);
 	this.view.scale = Map.tileScale;
 	this.view.alpha = 1;
+	this.view.pivot = new PIXI.Point(8, 8);
 
 	this.setPosition = function(x, y) {
 		this.position.x = x;
@@ -31,8 +32,8 @@ function Creature(name, texture) {
 				if(Map.collision.isWalkableAt(toPosition.x, toPosition.y)) {
 					this.status = STATUS.WALKING;
 					TweenLite.to(this.view.position, this.walkSpeed, {
-						x: toPosition.x * Map.tileWidth * Map.tileScale.x,
-						y: toPosition.y * Map.tileHeight * Map.tileScale.y,
+						x: (toPosition.x * Map.tileWidth + this.view.pivot.x) * Map.tileScale.x,
+						y: (toPosition.y * Map.tileHeight + this.view.pivot.y) * Map.tileScale.y,
 						ease: Linear.easeNone,
 						onUpdateScope: this,
 						onUpdate: this.onMove,

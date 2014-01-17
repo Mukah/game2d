@@ -38,7 +38,7 @@ Map.load = function(url, onComplete) {
 				var tile = new Tile();
 				tile.texture = new PIXI.Texture(Map.tilesets[tileset.name], new PIXI.Rectangle(tileset.margin + (x * tileset.tilewidth), tileset.margin + (y * tileset.tileheight), tileset.tilewidth, tileset.tileheight));
 				tile.properties = tileset.tileproperties[gid-1] || [];
-
+				
 				// Click event
 				if('onClick' in tile.properties) {
 					tile.onClick = Action[tile.properties['onClick']];
