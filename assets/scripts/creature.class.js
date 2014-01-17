@@ -20,8 +20,8 @@ function Creature(name, texture) {
 		this.position.x = x;
 		this.position.y = y;
 
-		this.view.position.x = x * Map.tileWidth * Map.tileScale.x;
-		this.view.position.y = y * Map.tileHeight * Map.tileScale.y;
+		this.view.position.x = (x * Map.tileWidth + this.view.pivot.x) * Map.tileScale.x;
+		this.view.position.y = (y * Map.tileHeight + this.view.pivot.y) * Map.tileScale.y;
 		return this;
 	};
 	this.moveTo = function(toPosition, callback) {

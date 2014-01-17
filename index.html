@@ -67,6 +67,9 @@
 			Game.protagonist = player;
 			Game.viewport.addChild(player.view);
 
+			label.position = player.view.position;
+			camera1.centerAt(player.view.position).focus();
+
 			// Player name label
 			label.setText(player.name);
 			Game.viewport.addChild(label);			
