@@ -58,16 +58,23 @@
 		var label = new PIXI.Text('null', { font: '14px Arial', fill: '#FFFFFF' });
 		label.anchor = new PIXI.Point(0.5, 2.5);
 
+		var pointLight;
+
 		Map.load('assets/maps/test-1.json', function() {
 			// Instantiate player
-			var player = new Player('mukahwagner', PIXI.Texture.fromImage('assets/creatures/player.png'));
-			player.onMove = function() {
-				label.position = player.view.position;
-				camera1.centerAt(player.view.position).focus();
-			};
-
+			var player = new Player({
+				name: 'Mukah',
+				texture: PIXI.Texture.fromImage('assets/creatures/player.png'),
+				health: {
+					now: 100,
+					max: 100
+				},
+				onMove: function() {
+					label.position = player.view.position;
+					camera1.centerAt(player.view.position).focus();
+				}
+			});
 			player.setPosition(3, 3);
-			
 			Game.protagonist = player;
 			Game.viewport.addChild(player.view);
 
@@ -77,31 +84,33 @@
 
 			// Testing GUI button
 			var bt = new GUIButton({
-				default: Map.tiles[5].texture,
-				over: Map.tiles[10].texture
+				textures: {
+					normal: Map.tiles[5].texture,
+					over: Map.tiles[10].texture
+				},
+				onClick: function() {
+					Game.protagonist.walkTo(new PIXI.Point(49,49));
+				}
 			});
 			bt.setPosition(new PIXI.Point(100, 100));
-			bt.click(function() {
-				Game.protagonist.walkTo(new PIXI.Point(49,49));
-			});
 			Game.stage.addChild(bt.view);
 
 			// Light point
-
-			var pointLight = new PointLight(PIXI.Texture.fromImage('assets/point.png'), 0xFDE69A, 0.7);
-			pointLight.view.position = new PIXI.Point(32*5, 32*5);
+			pointLight = new PointLight({
+				color: 0xFDE69A,
+				intensity: 0.7
+			});
+			pointLight.setPosition(new PIXI.Point(32*5, 32*5));
 			Game.viewport.addChild(pointLight.view);
 
 			// Map alpha tween
 			TweenLite.to(Game.mapContainer, 1, {
 				alpha: 1,
 				ease: Linear.easeNone,
-				onComplete: callback
+				onComplete: function(){
+					console.log('Animation finished.');
+				}
 			});
-
-			function callback() {
-				console.log('Animation finished.');
-			}
 		});
 
 		var camera1 = new Camera();

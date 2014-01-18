@@ -3,22 +3,21 @@ STATUS.IDLE = 0;
 STATUS.WALKING = 1;
 
 // CREATURES
-function Creature(name, texture) {
+function Creature(attrs) {
 	// Attributes
-	this.name = name;
+	this.name = attrs['name'] || "Unnamed";
 	this.position = new PIXI.Point(0, 0);
-	this.healthNow = 0;
-	this.healthMax = 0;
-	this.walkSpeed = 0.2;
+	this.healthNow = attrs['healthNow'] || 10;
+	this.healthMax = attrs['healthMax'] || 10;
+	this.walkSpeed = attrs['walkSpeed'] || 0.2;
 	this.status = STATUS.IDLE;
 
-	this.view = new PIXI.Sprite(texture);
+	this.view = new PIXI.Sprite(attrs['texture']);
 	this.view.scale = Map.tileScale;
-	this.view.alpha = 1;
 	this.view.pivot = new PIXI.Point(8, 8);
 
 	// Events
-	this.onMove = function() { };
+	this.onMove = attrs['onMove'] || function() { };
 
 	// Functions
 	this.setPosition = function(x, y) {

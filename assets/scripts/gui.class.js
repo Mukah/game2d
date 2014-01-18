@@ -1,22 +1,26 @@
 function GUIButton(options) {
-	this.view = new PIXI.Sprite(options['default']);
-	this.view.defaultCursor = CURSORS.POINTER;
+	// Attributes
+	this.view = new PIXI.Sprite(options['textures']['normal']);
+	this.view.defaultCursor = options['cursor'] || CURSORS.POINTER;
 	this.view.buttonMode = true;
 	this.view.interactive = true;
 
-	this.click = function(click) {
-		options['onClick'] = click;
-		this.view.click = options['onClick'];
-	};
-	this.setPosition = function(position) {
-		this.view.position = position;
-	}
 	// Events
 	var self = this;
+	this.onClick = function(click) {
+		this.view.click = click;
+	};
+	this.onClick(options['onClick'] || function() { });
+
 	this.view.mouseover = function() {
-		self.view.setTexture(options['over'] || options['default']);
+		self.view.setTexture(options['textures']['over'] || options['textures']['normal']);
 	}
 	this.view.mouseout = function() {
-		self.view.setTexture(options['default']);
+		self.view.setTexture(options['textures']['normal']);
+	}
+
+	// Functions
+	this.setPosition = function(position) {
+		this.view.position = position;
 	}
 }

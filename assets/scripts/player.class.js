@@ -1,5 +1,5 @@
 // PLAYER
-function Player(name, texture) {
+function Player(attrs) {
 	Creature.apply(this, arguments);
 	
 	this.teste = function() {

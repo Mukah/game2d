@@ -1,9 +1,27 @@
-function PointLight(texture, color, intensity) {
-	this.view = new PIXI.Sprite(texture);
-	this.view.anchor = new PIXI.Point(0.5, 0.5);
-	this.view.alpha = intensity || 1;
-	this.view.tint = color || 0xFFFFFF;//0xFDE69A;
-	this.view.blendMode = PIXI.blendModes.SCREEN;
+function PointLight(options) {
+	// Attributes
+	this.view = new PIXI.Sprite(options['map'] || PIXI.Texture.fromImage('assets/point.png'));
+	this.view.anchor = new PIXI.Point(options['anchorX'] || 0.5, options['anchorY'] || 0.5);
+	this.view.alpha = options['intensity'] || 1;
+	this.view.tint = options['color'] || 0xFFFFFF;//0xFDE69A;
+	this.view.blendMode = options['blendMode'] || PIXI.blendModes.SCREEN;
+
 	//this.view.scale = new PIXI.Point(2, 2);
 	//this.view.filters = [new PIXI.InvertFilter()];
+
+	// Functions
+	this.setPosition = function(position) {
+		this.view.position = position;
+	}
+
+	this.turnOn = function(duration) {
+		TweenLite.to(this.view, duration || 0, {
+			alpha: options['intensity']
+		});
+	}
+	this.turnOff = function(duration) {
+		TweenLite.to(this.view, duration || 0, {
+			alpha: 0
+		});
+	}
 }

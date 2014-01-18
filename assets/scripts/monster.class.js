@@ -1,5 +1,5 @@
 // PLAYER
-function Monster(name, texture) {
+function Monster(attrs) {
 	Creature.apply(this, arguments);
 
 	setTimeout(seek, 1000);
