@@ -31,6 +31,7 @@
 
 	<script type="text/javascript" src="assets/scripts/point.class.js"></script>
 
+	<script type="text/javascript" src="assets/scripts/pointlight.class.js"></script>
 	<script type="text/javascript" src="assets/scripts/gui.class.js"></script>	
 
 	<script type="text/javascript" src="assets/scripts/game.class.js"></script>
@@ -87,15 +88,9 @@
 
 			// Light point
 
-			var point = new PIXI.Sprite(PIXI.Texture.fromImage('assets/point.png'));
-			point.anchor = new PIXI.Point(0.5, 0.5);
-			point.position = new PIXI.Point(500, 500);
-			point.alpha = 0.7;
-			point.tint = 0xFDE69A; //FDE69A
-			point.blendMode = PIXI.blendModes.SCREEN;
-			//point.scale = new PIXI.Point(2, 2);
-			//point.filters = [new PIXI.InvertFilter()];
-			Game.viewport.addChild(point);
+			var pointLight = new PointLight(PIXI.Texture.fromImage('assets/point.png'), 0xFDE69A, 0.7);
+			pointLight.view.position = new PIXI.Point(32*5, 32*5);
+			Game.viewport.addChild(pointLight.view);
 
 			// Map alpha tween
 			TweenLite.to(Game.mapContainer, 1, {
