@@ -80,7 +80,7 @@
 
 			// Player name label
 			label.setText(player.name);
-			Game.viewport.addChild(label);			
+			Game.viewport.addChild(label);
 
 			// Testing GUI button
 			var bt = new GUIButton({
@@ -120,8 +120,7 @@
 		camera2.centerAt(new PIXI.Point(1600, 1600));
 
 		Game.onUpdate = function() {
-			// O update é executado antes do player ser instanciado.
-			if(Game.protagonist.status == STATUS.IDLE) {
+			if(Game.protagonist != undefined && Game.protagonist.status == STATUS.IDLE) {
 				if(Input.isDown(Input.KEY_DOWN)) {
 					Game.protagonist.move(DIRECTIONS.DOWN);
 				} else if(Input.isDown(Input.KEY_UP)) {

@@ -3,10 +3,8 @@ function PointLight(options) {
 	this.view = new PIXI.Sprite(options['map'] || PIXI.Texture.fromImage('assets/point.png'));
 	this.view.anchor = new PIXI.Point(options['anchorX'] || 0.5, options['anchorY'] || 0.5);
 	this.view.alpha = options['intensity'] || 1;
-	this.view.tint = options['color'] || 0xFFFFFF;//0xFDE69A;
+	this.view.tint = options['color'] || 0xFFFFFF; // Wellow light 0xFDE69A;
 	this.view.blendMode = options['blendMode'] || PIXI.blendModes.SCREEN;
-
-	//this.view.scale = new PIXI.Point(2, 2);
 	//this.view.filters = [new PIXI.InvertFilter()];
 
 	// Functions
@@ -22,6 +20,11 @@ function PointLight(options) {
 	this.turnOff = function(duration) {
 		TweenLite.to(this.view, duration || 0, {
 			alpha: 0
+		});
+	}
+	this.colorize = function(color, duration) {
+		TweenLite.to(this.view, duration || 0, {
+			tint: color
 		});
 	}
 }
