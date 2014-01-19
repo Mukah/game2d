@@ -59,6 +59,7 @@
 		label.anchor = new PIXI.Point(0.5, 2.5);
 
 		var pointLight;
+		var monster;
 
 		Map.load('assets/maps/test-1.json', function() {
 			// Instantiate player
@@ -76,7 +77,21 @@
 			});
 			player.setPosition(3, 3);
 			Game.protagonist = player;
-			Game.viewport.addChild(player.view);
+			Game.mapContainer.addChild(player.view);
+
+			// Monster
+			monster = new Monster({
+				name: 'Inimigo',
+				texture: PIXI.Texture.fromImage('assets/creatures/player.png'),
+				health: {
+					now: 10,
+					max: 10
+				},
+				fov: 5
+			});
+			monster.setPosition(10, 10);
+			monster.startSeek();
+			Game.mapContainer.addChild(monster.view);
 
 			// Player name label
 			label.setText(player.name);
@@ -100,7 +115,7 @@
 				color: 0xFDE69A,
 				intensity: 0.7
 			});
-			pointLight.setPosition(new PIXI.Point(32*5, 32*5));
+			pointLight.setPosition(new PIXI.Point(32*5+16, 32*5+16));
 			Game.viewport.addChild(pointLight.view);
 
 			// Map alpha tween
@@ -112,6 +127,14 @@
 				}
 			});
 		});
+
+		var ambient = new PIXI.Graphics();
+		ambient.beginFill(0x144478, 0.5);
+		ambient.drawRect(0, 0, 1600, 1600);
+		ambient.endFill();
+		//ambient.blendMode = PIXI.blendModes.SCREEN;
+		Game.viewport.addChild(ambient);
+		ambient.blendMode = PIXI.blendModes.SCREEN;
 
 		var camera1 = new Camera();
 		camera1.centerAt(new PIXI.Point(500, 500));

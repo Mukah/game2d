@@ -7,6 +7,7 @@ Map.tileHeight = undefined;
 Map.tileScale = new PIXI.Point(2, 2);
 Map.collision = undefined;
 
+// Future change the map class to instantiate
 Map.load = function(url, onComplete) {
 	Game.mapContainer.alpha = 0;
 	Game.viewport.addChild(Game.mapContainer);

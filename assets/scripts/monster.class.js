@@ -2,8 +2,18 @@
 function Monster(attrs) {
 	Creature.apply(this, arguments);
 
-	setTimeout(seek, 1000);
+	// Attributes
+	this.fov = attrs['fov'];
+
+	// Functions
+	var self = this;
 	this.seek = function() {
-		return 'method';
+		if(PIXI.Point.distance(self.position, Game.protagonist.position) <= self.fov) {
+			console.log("fdp");
+		}
+	}
+
+	this.startSeek = function() {
+		setInterval(this.seek, 1000);
 	}
 }

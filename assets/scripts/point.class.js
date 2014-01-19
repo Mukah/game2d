@@ -1,6 +1,6 @@
 // POINT
 PIXI.Point.distance = function(a, b) {
-	return Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2));
+	return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 };
 PIXI.Point.toCoords = function(position) {
 	var coords = position.clone();
