@@ -128,14 +128,6 @@
 			});
 		});
 
-		var ambient = new PIXI.Graphics();
-		ambient.beginFill(0x144478, 0.5);
-		ambient.drawRect(0, 0, 1600, 1600);
-		ambient.endFill();
-		//ambient.blendMode = PIXI.blendModes.SCREEN;
-		Game.viewport.addChild(ambient);
-		ambient.blendMode = PIXI.blendModes.SCREEN;
-
 		var camera1 = new Camera();
 		camera1.centerAt(new PIXI.Point(500, 500));
 
