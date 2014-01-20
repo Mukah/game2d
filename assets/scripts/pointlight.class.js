@@ -8,8 +8,10 @@ function PointLight(options) {
 	//this.view.filters = [new PIXI.InvertFilter()];
 
 	// Functions
-	this.setPosition = function(position) {
-		this.view.position = position;
+	this.setPosition = function(point) {
+		this.view.position.x = (point.x * Map.tileWidth + Map.tileWidth / 2) * Map.tileScale.x;
+		this.view.position.y = (point.y * Map.tileHeight + Map.tileHeight / 2) * Map.tileScale.y;
+		return this;
 	}
 
 	this.turnOn = function(duration) {

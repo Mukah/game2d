@@ -75,7 +75,7 @@
 					camera1.centerAt(player.view.position).focus();
 				}
 			});
-			player.setPosition(3, 3);
+			player.setPosition(new PIXI.Point(3, 3));
 			Game.protagonist = player;
 			Game.mapContainer.addChild(player.view);
 
@@ -90,7 +90,7 @@
 				walkSpeed: 0.5,
 				fov: 5
 			});
-			monster.setPosition(10, 10);
+			monster.setPosition(new PIXI.Point(10, 10));
 			monster.startSeek();
 			Game.mapContainer.addChild(monster.view);
 
@@ -108,7 +108,7 @@
 					Game.protagonist.walkTo(new PIXI.Point(49,49));
 				}
 			});
-			bt.setPosition(new PIXI.Point(100, 100));
+			bt.setPosition(100, 100);
 			Game.stage.addChild(bt.view);
 
 			// Light point
@@ -116,8 +116,9 @@
 				color: 0xFDE69A,
 				intensity: 0.7
 			});
-			pointLight.setPosition(new PIXI.Point(32*5+16, 32*5+16));
+			pointLight.setPosition(new PIXI.Point(10, 10));
 			Game.viewport.addChild(pointLight.view);
+			pointLight.turnOff(2);
 
 			// Map alpha tween
 			TweenLite.to(Game.mapContainer, 1, {

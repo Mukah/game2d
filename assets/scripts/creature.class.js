@@ -20,12 +20,12 @@ function Creature(attrs) {
 	this.onMove = attrs['onMove'] || function() { };
 
 	// Functions
-	this.setPosition = function(x, y) {
-		this.position.x = x;
-		this.position.y = y;
+	this.setPosition = function(point) {
+		this.position.x = point.x;
+		this.position.y = point.y;
 
-		this.view.position.x = (x * Map.tileWidth + this.view.pivot.x) * Map.tileScale.x;
-		this.view.position.y = (y * Map.tileHeight + this.view.pivot.y) * Map.tileScale.y;
+		this.view.position.x = (point.x * Map.tileWidth + this.view.pivot.x) * Map.tileScale.x;
+		this.view.position.y = (point.y * Map.tileHeight + this.view.pivot.y) * Map.tileScale.y;
 
 		this.onMove();
 		return this;

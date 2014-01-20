@@ -20,7 +20,8 @@ function GUIButton(options) {
 	}
 
 	// Functions
-	this.setPosition = function(position) {
-		this.view.position = position;
+	this.setPosition = function(x, y) {
+		this.view.position.x = x;
+		this.view.position.y = y;
 	}
 }
